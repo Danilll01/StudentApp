@@ -1,21 +1,33 @@
 import { StatusBar } from 'expo-status-bar';
 import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import axios from 'axios';
+import { Button, SafeAreaView, StyleSheet, Text, TouchableOpacity, View, Image, Linking } from 'react-native';
 
 export default function App() {
+  console.log("Hello world");
+  let x = 5;
+
   return (
-    <View style={styles.container}>
-      <Text>Open up App.js to start working on your app!</Text>
+    <SafeAreaView style={styles.container}>
+      <Text numberOfLines={2} onPress={handlePress}>Open up App.js to start working on your app! This is a very very long line of text to be displayed {x}</Text>
       <StatusBar style="auto" />
-    </View>
+      
+      <TouchableOpacity onPress={() => console.log("Hejjja")}>
+        <Image source={{ 
+          width: 200,
+          height: 300,
+          uri: "https://picsum.photos/200/300"}} />
+      </TouchableOpacity>
+      <Button title="Hej" onPress={() => Linking.openURL('canvas-courses://chalmers.instructure.com/courses/15148')}> </Button>
+    </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
+    backgroundColor: '#FFF',
     justifyContent: 'center',
+    alignItems: 'center'
   },
 });
