@@ -6,6 +6,16 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import Ionicons from '@expo/vector-icons/Ionicons';
 
+
+
+function TransportScreen() {
+  return (
+    <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+      <Text>Transport!</Text>
+    </View>
+  );
+}
+
 function HomeScreen() {
   return (
     <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
@@ -14,7 +24,7 @@ function HomeScreen() {
   );
 }
 
-function SettingsScreen() {
+function FoodScreen() {
   return (
     <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
       <Text>Settings!</Text>
@@ -54,44 +64,39 @@ export default function App() {
     // </SafeAreaView>
 
     <NavigationContainer>
-      <Tab.Navigator>
-        <Tab.Screen name="Home" component={HomeScreen} />
-        <Tab.Screen name="Settings" component={SettingsScreen} />
+      <Tab.Navigator screenOptions={({ route }) => ({
+            tabBarIcon: ({ focused, color, size }) => {
+              let iconName;
+
+              switch (route.name){
+                case 'Transport':
+                  iconName = 'bus-sharp';
+                  break;
+                case 'Mat':
+                  iconName = 'fast-food';
+                  break;
+                case 'Hem':
+                  iconName = 'home';
+                  break;
+                default:
+                  iconName = 'fast-food';
+              }
+
+              return <Ionicons name={iconName} size={size} color={color} />;
+            },
+          })}
+          tabBarOptions={{
+            activeTintColor: 'tomato',
+            inactiveTintColor: 'gray',
+          }}
+        >
+        <Tab.Screen name="Transport" component={TransportScreen} />
+        <Tab.Screen name="Mat" component={FoodScreen} />
+        <Tab.Screen name="Hem" component={HomeScreen} />
+        <Tab.Screen name="Schema" component={HomeScreen} />
+        <Tab.Screen name="Att göra" component={HomeScreen} />
       </Tab.Navigator>
     </NavigationContainer>
-
-    // <SafeAreaView style={{
-    //   backgroundColor: "limegreen",
-    //   flex: 1,
-    //   flexDirection: "column-reverse",
-    // }}>
-    //   <View style={{
-    //   backgroundColor: "red",
-    //   width: '100%',
-    //   height: 50,
-    //   flexDirection: "row",
-    //   justifyContent: "center",
-    //   alignItems: "center",
-    //   alignContent: "center",
-    //   flexWrap: "wrap",
-    // }}>
-    //   <Button title="Hej3" style={{
-    //     backgroundColor: "gold",
-    //     width: 100,
-    //     height: 100,
-    //   }}></Button>
-    //   <Button title="Hej3" style={{
-    //     backgroundColor: "tomato",
-    //     width: 100,
-    //     height: 100,
-    //   }}></Button>
-    //   <Button title="Hej3" style={{
-    //     backgroundColor: "green",
-    //     width: 100,
-    //     height: 100,
-    //   }}></Button>
-    // </View>
-    // </SafeAreaView>
     
   );
 }
