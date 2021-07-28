@@ -6,36 +6,100 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import Ionicons from '@expo/vector-icons/Ionicons';
 
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import uuid from 'react-native-uuid';
+import qs from 'qs-stringify';
 
+import HomeScreen from './app/screens/HomeScreen';
+
+const tokenEndPoint = "https://api.vasttrafik.se/token";
+const getToken = async key => {
+  const id = uuid.v4();
+  const res = await axios
+    .post(
+      tokenEndPoint,
+      qs({
+        grant_type: "client_credentials",
+        scope: id
+      }),
+      {
+        headers: {
+          Authorization: `Basic ${key}`,
+          "Access-Control-Allow-Origin": "*",
+          "Content-Type": "application/x-www-form-urlencoded;"
+        }
+      }
+    );
+  return {
+    id,
+    expiry: new Date().getTime() + res.data.expires_in * 1000,
+    ...res.data
+  };
+};
+
+
+function BasicWidget() {
+  return (
+    <View style={styles.basicWidget}>
+      <Text>Hello gajs</Text>
+    </View>
+  )
+}
 
 function TransportScreen() {
   return (
-    <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-      <Text>Transport!</Text>
-    </View>
-  );
-}
-
-function HomeScreen() {
-  return (
-    <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-      <Text>Home!</Text>
-    </View>
+    <SafeAreaView style={styles.container}>
+      <Text style={styles.headerText}>Kollektivtrafik</Text>
+      <View component={BasicWidget}></View>
+    </SafeAreaView>
   );
 }
 
 function FoodScreen() {
   return (
-    <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-      <Text>Settings!</Text>
-    </View>
+    <SafeAreaView style={styles.container}>
+      <Text style={styles.headerText}>Vad vill du äta idag?</Text>
+    </SafeAreaView>
+  );
+}
+
+function HomeScreen2() {
+  return (
+    <SafeAreaView style={styles.container}>
+      <Text style={styles.headerText}>Home!</Text>
+    </SafeAreaView>
   );
 }
 
 const Tab = createBottomTabNavigator();
 
+// JSON.stringify({ stations: [10, undefined, function(){}, Symbol('')] })
+const storeData = async (value) => {
+  try {
+    const jsonValue = JSON.stringify(value)
+    await AsyncStorage.setItem('@VT_key', jsonValue)
+  } catch (e) {
+    // saving error
+    console.log(e.message)
+  }
+}
+
+const getData = async () => {
+  try {
+    const jsonValue = await AsyncStorage.getItem('@VT_key')
+    return jsonValue != null ? JSON.parse(jsonValue) : null;
+  } catch(e) {
+    // error reading value
+    console.log(e.message)
+  }
+}
+
 export default function App() {
   let x = 5;
+  const VTkey = "KEY";
+  //console.log(getToken(VTkey))
+  //storeData(getToken(VTkey))
+  //console.log(getData())
 
   return (
     // <SafeAreaView style={styles.container}>
@@ -101,10 +165,26 @@ export default function App() {
   );
 }
 
+const sideMargin = '5%';
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#FFF',
     paddingTop: Platform.OS === "android" ? StatusBar.currentHeight : 0,
+  },
+  headerText: {
+    paddingTop: 20,
+    paddingLeft: sideMargin,
+    paddingBottom: 20,
+    fontSize: 34,
+    fontWeight: 'bold',
+  },
+  basicWidget: {
+    backgroundColor: 'red',
+    marginLeft: sideMargin,
+    width: '90%',
+    height: 300,
+    borderRadius: 16,
   },
 });
