@@ -22,4 +22,9 @@ export default StyleSheet.create({
     height: 300,
     borderRadius: 16,
   },
+  widgetArea: {
+    backgroundColor: 'blue',
+    marginLeft: sideMargin,
+    width: '90%',
+  }
 });

@@ -11,6 +11,8 @@ import uuid from 'react-native-uuid';
 import qs from 'qs-stringify';
 
 import HomeScreen from './app/screens/HomeScreen';
+import TransportScreen from './app/screens/TransportScreen';
+import FoodScreen from './app/screens/FoodScreen';
 
 const tokenEndPoint = "https://api.vasttrafik.se/token";
 const getToken = async key => {
@@ -36,40 +38,6 @@ const getToken = async key => {
     ...res.data
   };
 };
-
-
-function BasicWidget() {
-  return (
-    <View style={styles.basicWidget}>
-      <Text>Hello gajs</Text>
-    </View>
-  )
-}
-
-function TransportScreen() {
-  return (
-    <SafeAreaView style={styles.container}>
-      <Text style={styles.headerText}>Kollektivtrafik</Text>
-      <View component={BasicWidget}></View>
-    </SafeAreaView>
-  );
-}
-
-function FoodScreen() {
-  return (
-    <SafeAreaView style={styles.container}>
-      <Text style={styles.headerText}>Vad vill du äta idag?</Text>
-    </SafeAreaView>
-  );
-}
-
-function HomeScreen2() {
-  return (
-    <SafeAreaView style={styles.container}>
-      <Text style={styles.headerText}>Home!</Text>
-    </SafeAreaView>
-  );
-}
 
 const Tab = createBottomTabNavigator();
 
@@ -164,27 +132,3 @@ export default function App() {
     
   );
 }
-
-const sideMargin = '5%';
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#FFF',
-    paddingTop: Platform.OS === "android" ? StatusBar.currentHeight : 0,
-  },
-  headerText: {
-    paddingTop: 20,
-    paddingLeft: sideMargin,
-    paddingBottom: 20,
-    fontSize: 34,
-    fontWeight: 'bold',
-  },
-  basicWidget: {
-    backgroundColor: 'red',
-    marginLeft: sideMargin,
-    width: '90%',
-    height: 300,
-    borderRadius: 16,
-  },
-});

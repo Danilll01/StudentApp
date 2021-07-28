@@ -1,5 +1,5 @@
 import React from 'react';
-import { Button, SafeAreaView, StyleSheet, Text, TouchableOpacity, View, Image, Linking, Alert, StatusBar, Platform } from 'react-native';
+import { Button, SafeAreaView, StyleSheet, Text, View, Image, Linking, Alert, StatusBar, Platform } from 'react-native';
 import styles from './ScreenStyle.js'
 
 function HomeScreen(props) {
