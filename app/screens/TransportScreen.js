@@ -1,17 +1,19 @@
 import React from 'react';
-import { SafeAreaView, View, Text } from 'react-native';
+import { SafeAreaView, View, Text, ScrollView } from 'react-native';
 import styles from './ScreenStyle.js'
-import BasicWidget from '../widgets/BasicWidget.js';
+import VtStopWidget from '../widgets/VtStopWidget.js';
 
 function TransportScreen(props) {
     return (
         <SafeAreaView style={styles.container}>
-            <Text style={styles.headerText}>Kollektivtrafik</Text>
-            <View style={styles.widgetArea}>
-                <BasicWidget></BasicWidget>
-                <BasicWidget></BasicWidget>
-                <BasicWidget></BasicWidget>
-            </View>
+            <ScrollView>
+                <Text style={styles.headerText}>Kollektivtrafik</Text>
+                <View style={styles.widgetArea}>
+                    <VtStopWidget></VtStopWidget>
+                    <VtStopWidget></VtStopWidget>
+                    <VtStopWidget></VtStopWidget>
+                </View>
+            </ScrollView>
         </SafeAreaView>
     );
 }

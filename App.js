@@ -15,6 +15,7 @@ import TransportScreen from './app/screens/TransportScreen';
 import FoodScreen from './app/screens/FoodScreen';
 
 const tokenEndPoint = "https://api.vasttrafik.se/token";
+
 const getToken = async key => {
   const id = uuid.v4();
   const res = await axios
@@ -39,22 +40,48 @@ const getToken = async key => {
   };
 };
 
+// const getToken = key => {
+//     const id = uuid.v4();
+//     return axios
+//       .post(
+//         tokenEndPoint,
+//         qs({
+//           grant_type: "client_credentials",
+//           scope: id
+//         }),
+//         {
+//           headers: {
+//             Authorization: `Basic ${key}`,
+//             "Access-Control-Allow-Origin": "*",
+//             "Content-Type": "application/x-www-form-urlencoded;"
+//           }
+//         }
+//       )
+//       .then(res => {
+//         return {
+//           id,
+//           expiry: new Date().getTime() + res.data.expires_in * 1000,
+//           ...res.data
+//         };
+//     });
+// };
+
 const Tab = createBottomTabNavigator();
 
 // JSON.stringify({ stations: [10, undefined, function(){}, Symbol('')] })
-const storeData = async (value) => {
+const storeData = async (key, value) => {
   try {
     const jsonValue = JSON.stringify(value)
-    await AsyncStorage.setItem('@VT_key', jsonValue)
+    await AsyncStorage.setItem(key, jsonValue)
   } catch (e) {
     // saving error
     console.log(e.message)
   }
 }
 
-const getData = async () => {
+const getData = async (key) => {
   try {
-    const jsonValue = await AsyncStorage.getItem('@VT_key')
+    const jsonValue = await AsyncStorage.getItem(key)
     return jsonValue != null ? JSON.parse(jsonValue) : null;
   } catch(e) {
     // error reading value
@@ -65,7 +92,9 @@ const getData = async () => {
 export default function App() {
   let x = 5;
   const VTkey = "KEY";
-  //console.log(getToken(VTkey))
+  
+  getToken(VTkey).then(token => {console.log(token); storeData('@tokenDataVT', token)});
+  getData('@tokenDataVT').then((res) => {console.log(res)});
   //storeData(getToken(VTkey))
   //console.log(getData())
 

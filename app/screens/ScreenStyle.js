@@ -23,7 +23,6 @@ export default StyleSheet.create({
     borderRadius: 16,
   },
   widgetArea: {
-    backgroundColor: 'blue',
     marginLeft: sideMargin,
     width: '90%',
   }

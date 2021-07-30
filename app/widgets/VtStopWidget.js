@@ -2,12 +2,12 @@ import React from 'react';
 import { View, Text } from 'react-native';
 import styles from './WidgetStyles.js';
 
-function BasicWidget(props) {
+function VtStopWidget(props) {
     return (
         <View style={styles.basicWidget}>
-            <Text>Hello gajs2</Text>
+            <Text h1 style={styles.basicWidgetHeader}>Chalmers</Text>
         </View>
     );
 }
 
-export default BasicWidget;
+export default VtStopWidget;
