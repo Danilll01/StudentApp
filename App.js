@@ -1,100 +1,25 @@
 import React from 'react';
-import axios from 'axios';
 import { Button, SafeAreaView, StyleSheet, Text, TouchableOpacity, View, Image, Linking, Alert, StatusBar, Platform } from 'react-native';
 
 import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import Ionicons from '@expo/vector-icons/Ionicons';
 
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import uuid from 'react-native-uuid';
-import qs from 'qs-stringify';
-
 import HomeScreen from './app/screens/HomeScreen';
 import TransportScreen from './app/screens/TransportScreen';
 import FoodScreen from './app/screens/FoodScreen';
 
-const tokenEndPoint = "https://api.vasttrafik.se/token";
-
-const getToken = async key => {
-  const id = uuid.v4();
-  const res = await axios
-    .post(
-      tokenEndPoint,
-      qs({
-        grant_type: "client_credentials",
-        scope: id
-      }),
-      {
-        headers: {
-          Authorization: `Basic ${key}`,
-          "Access-Control-Allow-Origin": "*",
-          "Content-Type": "application/x-www-form-urlencoded;"
-        }
-      }
-    );
-  return {
-    id,
-    expiry: new Date().getTime() + res.data.expires_in * 1000,
-    ...res.data
-  };
-};
-
-// const getToken = key => {
-//     const id = uuid.v4();
-//     return axios
-//       .post(
-//         tokenEndPoint,
-//         qs({
-//           grant_type: "client_credentials",
-//           scope: id
-//         }),
-//         {
-//           headers: {
-//             Authorization: `Basic ${key}`,
-//             "Access-Control-Allow-Origin": "*",
-//             "Content-Type": "application/x-www-form-urlencoded;"
-//           }
-//         }
-//       )
-//       .then(res => {
-//         return {
-//           id,
-//           expiry: new Date().getTime() + res.data.expires_in * 1000,
-//           ...res.data
-//         };
-//     });
-// };
-
 const Tab = createBottomTabNavigator();
 
 // JSON.stringify({ stations: [10, undefined, function(){}, Symbol('')] })
-const storeData = async (key, value) => {
-  try {
-    const jsonValue = JSON.stringify(value)
-    await AsyncStorage.setItem(key, jsonValue)
-  } catch (e) {
-    // saving error
-    console.log(e.message)
-  }
-}
 
-const getData = async (key) => {
-  try {
-    const jsonValue = await AsyncStorage.getItem(key)
-    return jsonValue != null ? JSON.parse(jsonValue) : null;
-  } catch(e) {
-    // error reading value
-    console.log(e.message)
-  }
-}
+
 
 export default function App() {
   let x = 5;
-  const VTkey = "KEY";
+  var oldToken = false;  
   
-  getToken(VTkey).then(token => {console.log(token); storeData('@tokenDataVT', token)});
-  getData('@tokenDataVT').then((res) => {console.log(res)});
+  //getData('@tokenDataVT').then((res) => {console.log(res)});
   //storeData(getToken(VTkey))
   //console.log(getData())
 
