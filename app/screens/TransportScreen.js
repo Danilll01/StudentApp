@@ -50,41 +50,88 @@ function GenerateAndStoreToken() {
 const GetVTDataTest = async () => {
     let VTaccessToken;
     await getData('@tokenDataVT').then((token) => {
-        console.log(token.access_token);
         VTaccessToken = token.access_token;
-        console.log("2")
     })
-    console.log(VTaccessToken);
     const res = await axios
     .get(
         "https://api.vasttrafik.se/bin/rest.exe/v2/location.name?" +
         qs({
         input: "Ytterby",
-        format: "application/json",
+        format: "json",
       }),
       {
         headers: {
             "Authorization": `Bearer ${VTaccessToken}`,
-            "content-type": "application/json",
-            "Accept": "application/json"
         } 
       }
     ).then((res) => {
       return res
+    }).catch(err => {
+      console.log(err.message);
     })
-    
+    return {
+      res
+    }
+}
+
+const GetDepatureBoard = async (stopId) => {
+  console.log("Calling Dep API")
+  let VTaccessToken;
+  await getData('@tokenDataVT').then((token) => {
+      VTaccessToken = token.access_token;
+  })
+  const res = await axios
+  .get(
+      "https://api.vasttrafik.se/bin/rest.exe/v2/departureBoard?" +
+      qs({
+      id: stopId, // 9021014014715000
+      date: new Date().toISOString().slice(0, 10), // YYYY-MM-DD
+      time: new Date().toISOString().split('T')[1].slice(0, 5), // HH:mm
+      format: "json",
+    }),
+    {
+      headers: {
+        "Authorization": `Bearer ${VTaccessToken}`,
+      } 
+    }
+  ).then((res) => {
+    return res
+  })
+  return {res};
+}
+
+const GetNearestStop = async (GPSlat, GPSlon) => {
+  let VTaccessToken;
+  await getData('@tokenDataVT').then((token) => {
+      VTaccessToken = token.access_token;
+  })
+  const res = await axios
+  .get(
+      "https://api.vasttrafik.se/bin/rest.exe/v2/location.nearbystops?" +
+      qs({
+      input: "Ytterby",
+      format: "json",
+    }),
+    {
+      headers: {
+          "Authorization": `Bearer ${VTaccessToken}`,
+      } 
+    }
+  ).then((res) => {
+    return res
+  }).catch(err => {
+    console.log(err.message);
+  })
   return {
     res
-  };
+  }
 }
 
 const TestTest = async () => {
     let data;
     await GetVTDataTest().then((res) => {
         console.log("halleluja")
-        xml2j.parseString(res.res.data,function (err, result) {
-            data = result.LocationList.StopLocation;
-        })
+        data = res.res.data.LocationList.StopLocation;
     }).catch((res) => {
         console.log(res)
     })
@@ -94,17 +141,24 @@ const TestTest = async () => {
 
 function TransportScreen() {
     const [stationSearch, setStationSearch] = useState([]);
-
+    const [departureBoard, setDepartureBoard] = useState([]);
+    const [nearestStop, setNearestStop] = useState([]);
+    
     useEffect(() => {
       let mounted = true;
 
       if(mounted) {
-      GenerateAndStoreToken();
-      TestTest().then(res => {
+        console.log("rerender time");
+        GenerateAndStoreToken();
+        TestTest().then(res => {
           setStationSearch(res);
-      }).catch(err => {
+        }).catch(err => {
           console.log(err.message);
-      });
+        });
+
+        GetDepatureBoard(9021014014710000).then(res => {
+          setDepartureBoard(res.res.data);
+        });
 
       }
       mounted = false;
@@ -112,14 +166,8 @@ function TransportScreen() {
       return () => {
         mounted = false;
       }
-    }, [])
-    
-    let inputProps = {
-        text: "hej"
-    };
-    
-    
-    
+    }, []);
+
     return (
         <SafeAreaView style={styles.container}>
             <ScrollView>
@@ -128,12 +176,12 @@ function TransportScreen() {
                     <Button title="Hej" onPress={() => Linking.openURL('vaesttrafik://query?Z=Korsv%C3%A4gen%2C+G%C3%B6teborg&start')}> </Button>
                     
                     {stationSearch.map(item => {
-                        return <Text>{item.$.name}</Text>;
+                        return <Text key={item.name}>{item.name}</Text>;
                     })}
-
-                    <VtStopWidget props={inputProps}></VtStopWidget>
-                    <VtStopWidget></VtStopWidget>
-                    <VtStopWidget></VtStopWidget>
+                    
+                    <VtStopWidget props={departureBoard}></VtStopWidget>
+                    {/* <VtStopWidget></VtStopWidget>
+                    <VtStopWidget></VtStopWidget> */}
                 </View>
             </ScrollView>
         </SafeAreaView>
