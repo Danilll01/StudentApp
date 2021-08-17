@@ -7,9 +7,18 @@ import { getData, storeData } from '../DataStorage.js';
 
 import uuid from 'react-native-uuid';
 import qs from 'qs-stringify';
-import xml2j from 'react-native-xml2js';
+import VTkey from '../APIKey.js';
+import locationHandler from '../LocationHandler.js';
 
-const VTkey = "KEY";
+// Helper functions 
+function DateToFormattedString(d) {         
+  var yyyy = d.getFullYear().toString();                                    
+  var mm = (d.getMonth()+1).toString(); // getMonth() is zero-based         
+  var dd  = d.getDate().toString();             
+
+  return yyyy + '-' + (mm[1] ? mm : "0" + mm[0]) + '-' + (dd[1] ? dd : "0" + dd[0]);
+};  
+// Helper funtions END
 
 const getToken = async () => {
   const id = uuid.v4();
@@ -22,7 +31,7 @@ const getToken = async () => {
       }),
       {
         headers: {
-          Authorization: `Basic ${VTkey}`,
+          "Authorization": `Basic ${VTkey}`,
           "Access-Control-Allow-Origin": "*",
           "Content-Type": "application/x-www-form-urlencoded;"
         }
@@ -85,8 +94,8 @@ const GetDepatureBoard = async (stopId) => {
       "https://api.vasttrafik.se/bin/rest.exe/v2/departureBoard?" +
       qs({
       id: stopId, // 9021014014715000
-      date: new Date().toISOString().slice(0, 10), // YYYY-MM-DD
-      time: new Date().toISOString().split('T')[1].slice(0, 5), // HH:mm
+      date: DateToFormattedString(new Date()), // YYYY-MM-DD
+      time: new Date().toTimeString().split(':').slice(0,2).join(':'), // HH:mm
       format: "json",
     }),
     {
@@ -143,11 +152,15 @@ function TransportScreen() {
     const [stationSearch, setStationSearch] = useState([]);
     const [departureBoard, setDepartureBoard] = useState([]);
     const [nearestStop, setNearestStop] = useState([]);
+    const [location, setLocation] = useState([]);
     
     useEffect(() => {
       let mounted = true;
 
       if(mounted) {
+        locationHandler().then((res) => {
+          setLocation(res);
+        })
         console.log("rerender time");
         GenerateAndStoreToken();
         TestTest().then(res => {

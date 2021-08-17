@@ -28,6 +28,9 @@
     "web": {
       "favicon": "./app/assets/favicon.png"
     },
-    "description": ""
+    "description": "",
+    "plugins": [
+      "expo-location"
+    ]
   }
 }

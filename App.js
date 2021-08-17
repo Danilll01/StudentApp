@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect} from 'react';
 import { Button, SafeAreaView, StyleSheet, Text, TouchableOpacity, View, Image, Linking, Alert, StatusBar, Platform } from 'react-native';
 
 import { NavigationContainer } from '@react-navigation/native';
@@ -16,8 +16,7 @@ const Tab = createBottomTabNavigator();
 
 
 export default function App() {
-  let x = 5;
-  var oldToken = false;  
+  
   
   //getData('@tokenDataVT').then((res) => {console.log(res)});
   //storeData(getToken(VTkey))

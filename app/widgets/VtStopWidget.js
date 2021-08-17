@@ -9,14 +9,13 @@ function VtStopWidget(props) {
         let mounted = true;
         
         if(mounted) {
+            setDepartureList([]);
             if (Object.keys(props).length != 0) {
             if (Object.keys(props.props).length > 0) {
                 //console.log(props);
                 //console.log(props.props.DepartureBoard.Departure.slice(0, 5));
                 if (typeof props.props.DepartureBoard.Departure !== undefined) {
                     setDepartureList(props.props.DepartureBoard.Departure.slice(0,6));
-                } else {
-                    setDepartureList([]);
                 }
             };
         };
