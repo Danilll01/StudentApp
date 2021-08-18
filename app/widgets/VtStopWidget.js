@@ -32,7 +32,7 @@ function VtStopWidget(props) {
         <View style={styles.basicWidget}>
             {console.log(departureList.length)}
             <Text h1 style={styles.basicWidgetHeader}>{(typeof departureList === undefined) || (departureList.length == 0) ? "test" : departureList[0].stop.split(',')[0]}</Text>
-            {console.log("Rerendering")}
+
             {departureList.map(ride => {
                 return (
                 <View style={VtStopWidgetStyle.rideItem} key={ride.journeyid}>

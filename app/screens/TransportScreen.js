@@ -18,6 +18,21 @@ function DateToFormattedString(d) {
 
   return yyyy + '-' + (mm[1] ? mm : "0" + mm[0]) + '-' + (dd[1] ? dd : "0" + dd[0]);
 };  
+
+function getUniqueStations(stations) {
+  let uniqueStations = [];
+  stations.map(station => {
+    let stationID = parseInt(station.id);
+    // Checks if station starts with 9021. If 21 it's a real station and 9022 is a track of a station.
+    if (stationID - 9021000000000000 < 1000000000000) { 
+      if (uniqueStations.indexOf(stationID) == -1) {
+        uniqueStations.push(stationID);
+      }
+    }
+    
+  });
+  return uniqueStations;
+}
 // Helper funtions END
 
 const getToken = async () => {
@@ -118,12 +133,13 @@ const GetNearestStop = async (GPSlat, GPSlon) => {
   .get(
       "https://api.vasttrafik.se/bin/rest.exe/v2/location.nearbystops?" +
       qs({
-      input: "Ytterby",
+      originCoordLat: GPSlat,
+      originCoordLong: GPSlon,
       format: "json",
     }),
     {
       headers: {
-          "Authorization": `Bearer ${VTaccessToken}`,
+        "Authorization": `Bearer ${VTaccessToken}`,
       } 
     }
   ).then((res) => {
@@ -150,7 +166,7 @@ const TestTest = async () => {
 
 function TransportScreen() {
     const [stationSearch, setStationSearch] = useState([]);
-    const [departureBoard, setDepartureBoard] = useState([]);
+    const [departureBoards, setDepartureBoards] = useState([]);
     const [nearestStop, setNearestStop] = useState([]);
     const [location, setLocation] = useState([]);
     
@@ -158,20 +174,34 @@ function TransportScreen() {
       let mounted = true;
 
       if(mounted) {
+        GenerateAndStoreToken();
+
         locationHandler().then((res) => {
           setLocation(res);
-        })
-        console.log("rerender time");
-        GenerateAndStoreToken();
-        TestTest().then(res => {
-          setStationSearch(res);
-        }).catch(err => {
-          console.log(err.message);
-        });
+          GetNearestStop(res.coords.latitude, res.coords.longitude).then(res => {
+            setDepartureBoards([]);
 
-        GetDepatureBoard(9021014014710000).then(res => {
-          setDepartureBoard(res.res.data);
+            let stations = res.res.data.LocationList.StopLocation;
+            let uniqueStations = getUniqueStations(stations);
+            uniqueStations.map(station => {
+              GetDepatureBoard(station).then(depBoard => {
+                setDepartureBoards(depBoards => [...depBoards, depBoard.res.data]);
+              })
+            })
+
+          });
         });
+        console.log("rerender time");
+        
+        // TestTest().then(res => {
+        //   setStationSearch(res);
+        // }).catch(err => {
+        //   console.log(err.message);
+        // });
+
+        // GetDepatureBoard(9021014014710000).then(res => {
+        //   setDepartureBoards(res.res.data);
+        // });
 
       }
       mounted = false;
@@ -186,15 +216,16 @@ function TransportScreen() {
             <ScrollView>
                 <Text style={styles.headerText}>Kollektivtrafik</Text>
                 <View style={styles.widgetArea}>
-                    <Button title="Hej" onPress={() => Linking.openURL('vaesttrafik://query?Z=Korsv%C3%A4gen%2C+G%C3%B6teborg&start')}> </Button>
+                    {/* <Button title="Hej" onPress={() => Linking.openURL('vaesttrafik://query?Z=Korsv%C3%A4gen%2C+G%C3%B6teborg&start')}> </Button> */}
                     
                     {stationSearch.map(item => {
-                        return <Text key={item.name}>{item.name}</Text>;
+                      return <Text key={item.name}>{item.name}</Text>;
                     })}
                     
-                    <VtStopWidget props={departureBoard}></VtStopWidget>
-                    {/* <VtStopWidget></VtStopWidget>
-                    <VtStopWidget></VtStopWidget> */}
+                    {departureBoards.map(depBoard => {
+                      return <VtStopWidget key={depBoard.DepartureBoard.Departure[0].stopid} props={depBoard}></VtStopWidget>
+                    })}
+                    
                 </View>
             </ScrollView>
         </SafeAreaView>
