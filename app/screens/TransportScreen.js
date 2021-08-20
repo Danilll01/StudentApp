@@ -6,6 +6,7 @@ import VtStopWidget from '../widgets/VtStopWidget.js';
 import { getData, storeData } from '../DataStorage.js';
 
 import uuid from 'react-native-uuid';
+import { usePromiseTracker, trackPromise } from "react-promise-tracker";
 import qs from 'qs-stringify';
 import VTkey from '../APIKey.js';
 import locationHandler from '../LocationHandler.js';
@@ -164,6 +165,15 @@ const TestTest = async () => {
     return data;
 }
 
+const LoadingIndicator = props => {
+    const { promiseInProgress } = usePromiseTracker();
+  
+     return (
+      promiseInProgress && 
+      <Text>Hämtar västtrafik data</Text>
+    );  
+   }
+
 function TransportScreen() {
     const [stationSearch, setStationSearch] = useState([]);
     const [departureBoards, setDepartureBoards] = useState([]);
@@ -176,7 +186,7 @@ function TransportScreen() {
       if(mounted) {
         GenerateAndStoreToken();
 
-        locationHandler().then((res) => {
+        trackPromise( locationHandler().then((res) => {
           setLocation(res);
           GetNearestStop(res.coords.latitude, res.coords.longitude).then(res => {
             setDepartureBoards([]);
@@ -190,7 +200,7 @@ function TransportScreen() {
             })
 
           });
-        });
+        }));
         console.log("rerender time");
         
         // TestTest().then(res => {
@@ -221,6 +231,8 @@ function TransportScreen() {
                     {stationSearch.map(item => {
                       return <Text key={item.name}>{item.name}</Text>;
                     })}
+
+                    <LoadingIndicator/>
                     
                     {departureBoards.map(depBoard => {
                       return <VtStopWidget key={depBoard.DepartureBoard.Departure[0].stopid} props={depBoard}></VtStopWidget>
