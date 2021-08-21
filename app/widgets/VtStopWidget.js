@@ -1,6 +1,19 @@
 import React, { useState, useEffect} from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import styles from './WidgetStyles.js';
+import moment from "moment";
+
+function getDepTimeDiff(date, time) {
+    var ms = moment(moment(date + " " + time,"YYYY-MM-DD HH:mm")).diff(moment().format("YYYY-MM-DD HH:mm"));
+    var d = moment.duration(ms);
+    var s;
+    if (d.asMinutes() < 0) {
+        s = "Avgått"
+    } else {
+        s = (d.hours() === 0 ? "" : d.hours() + "h ") + moment.utc(ms).format("m") + " min";
+    }
+    return s;
+}
 
 function VtStopWidget(props) {
     const [departureList, setDepartureList] = useState([]);
@@ -30,17 +43,15 @@ function VtStopWidget(props) {
     
     return (
         <View style={styles.basicWidget}>
-            {console.log(departureList.length)}
             <Text h1 style={styles.basicWidgetHeader}>{(typeof departureList === undefined) || (departureList.length == 0) ? "test" : departureList[0].stop.split(',')[0]}</Text>
-
             {departureList.map(ride => {
                 return (
-                <View style={VtStopWidgetStyle.rideItem} key={ride.journeyid}>
-                    <View style={{backgroundColor: ride.bgColor, width: 35, height: 30, borderRadius: 5, justifyContent: 'center'}}>
-                        <Text style={{color: ride.fgColor, textAlign: 'center', fontWeight: 'bold',}}>{ride.sname}</Text>
+                <View style={VtStopWidgetStyle.rideItem} key={"SID" + ride.stopid + "JID" + ride.journeyid}>
+                    <View style={{backgroundColor: ride.bgColor, width: 45, height: 33, borderRadius: 5, justifyContent: 'center'}}>
+                        <Text style={{color: ride.fgColor, textAlign: 'center', fontWeight: 'bold', fontSize: 14,}}>{ride.sname}</Text>
                     </View>
-                    <Text style={VtStopWidgetStyle.rideName}>{ride.name}</Text>
-                    <Text style={{marginLeft: 'auto'}}>{ride.time}</Text>
+                    <Text style={VtStopWidgetStyle.rideName}>{"Mot " + ride.direction}</Text>
+                    <Text style={{marginLeft: 'auto'}}>{getDepTimeDiff(ride.date, ride.time)}</Text>
                 </View>)
             })}
         </View>
@@ -54,6 +65,7 @@ const VtStopWidgetStyle = StyleSheet.create({
         paddingBottom: 0,
     },
     rideName: {
+        width: '60%',
         paddingLeft:5,
     }
 })

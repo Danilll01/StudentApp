@@ -62,42 +62,13 @@ const getToken = async () => {
 
 function GenerateAndStoreToken() {
     getData('@tokenDataVT').then((res) => {
-        //console.log(res);
         if(res === null || res.expiry < Date.now()) {
-          getToken().then(token => {console.log("needed"); storeData('@tokenDataVT', token)});
-        } else {
-            console.log("Not needed")
+          getToken().then(token => {
+            storeData('@tokenDataVT', token)
+          });
         };
     });
-    console.log("1")
-} 
-
-const GetVTDataTest = async () => {
-    let VTaccessToken;
-    await getData('@tokenDataVT').then((token) => {
-        VTaccessToken = token.access_token;
-    })
-    const res = await axios
-    .get(
-        "https://api.vasttrafik.se/bin/rest.exe/v2/location.name?" +
-        qs({
-        input: "Ytterby",
-        format: "json",
-      }),
-      {
-        headers: {
-            "Authorization": `Bearer ${VTaccessToken}`,
-        } 
-      }
-    ).then((res) => {
-      return res
-    }).catch(err => {
-      console.log(err.message);
-    })
-    return {
-      res
-    }
-}
+};
 
 const GetDepatureBoard = async (stopId) => {
   console.log("Calling Dep API")
@@ -136,6 +107,7 @@ const GetNearestStop = async (GPSlat, GPSlon) => {
       qs({
       originCoordLat: GPSlat,
       originCoordLong: GPSlon,
+      maxNo: 20,
       format: "json",
     }),
     {
@@ -151,18 +123,6 @@ const GetNearestStop = async (GPSlat, GPSlon) => {
   return {
     res
   }
-}
-
-const TestTest = async () => {
-    let data;
-    await GetVTDataTest().then((res) => {
-        console.log("halleluja")
-        data = res.res.data.LocationList.StopLocation;
-    }).catch((res) => {
-        console.log(res)
-    })
-    
-    return data;
 }
 
 const LoadingIndicator = props => {
@@ -202,16 +162,6 @@ function TransportScreen() {
           });
         }));
         console.log("rerender time");
-        
-        // TestTest().then(res => {
-        //   setStationSearch(res);
-        // }).catch(err => {
-        //   console.log(err.message);
-        // });
-
-        // GetDepatureBoard(9021014014710000).then(res => {
-        //   setDepartureBoards(res.res.data);
-        // });
 
       }
       mounted = false;
@@ -224,20 +174,15 @@ function TransportScreen() {
     return (
         <SafeAreaView style={styles.container}>
             <ScrollView>
-                <Text style={styles.headerText}>Kollektivtrafik</Text>
+                <Text style={styles.headerText}>Kollektivtrafik 🚍</Text>
                 <View style={styles.widgetArea}>
                     {/* <Button title="Hej" onPress={() => Linking.openURL('vaesttrafik://query?Z=Korsv%C3%A4gen%2C+G%C3%B6teborg&start')}> </Button> */}
                     
-                    {stationSearch.map(item => {
-                      return <Text key={item.name}>{item.name}</Text>;
-                    })}
-
                     <LoadingIndicator/>
                     
                     {departureBoards.map(depBoard => {
-                      return <VtStopWidget key={depBoard.DepartureBoard.Departure[0].stopid} props={depBoard}></VtStopWidget>
+                      return <VtStopWidget key={depBoard.DepartureBoard.Departure[0].stopid + new Date().now} props={depBoard}></VtStopWidget>
                     })}
-                    
                 </View>
             </ScrollView>
         </SafeAreaView>
