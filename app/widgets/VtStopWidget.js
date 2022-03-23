@@ -7,11 +7,13 @@ function getDepTimeDiff(date, time) {
     var ms = moment(moment(date + " " + time,"YYYY-MM-DD HH:mm")).diff(moment().format("YYYY-MM-DD HH:mm"));
     var d = moment.duration(ms);
     var s;
-    if (d.asMinutes() < 0) {
+    if (d.asMinutes() <= 0) {
         s = "Avgått"
-    } else {
-        s = (d.hours() === 0 ? "" : d.hours() + "h ") + moment.utc(ms).format("m") + " min";
-    }
+      } else if(d.hours() !== 0) {
+        s = time;
+       } else {
+        s = moment.utc(ms).format("m") + " min";
+      }
     return s;
 }
 

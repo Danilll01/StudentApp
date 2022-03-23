@@ -4,7 +4,8 @@ export default StyleSheet.create({
   basicWidget: {
     backgroundColor: '#EDEDED',
     marginBottom: 20,
-    height: 300,
+    paddingBottom: 20,
+    height: 'auto',
     borderRadius: 16,
   },
   basicWidgetHeader: {

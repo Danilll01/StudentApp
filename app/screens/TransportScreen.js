@@ -83,6 +83,7 @@ const GetDepatureBoard = async (stopId) => {
       id: stopId, // 9021014014715000
       date: DateToFormattedString(new Date()), // YYYY-MM-DD
       time: new Date().toTimeString().split(':').slice(0,2).join(':'), // HH:mm
+      timeSpan: 120,
       format: "json",
     }),
     {
