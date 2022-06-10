@@ -69,8 +69,8 @@ function TransportScreen() {
                     
                     <LoadingIndicator/>
                     
-                    {departureBoards.map(depBoard => {
-                      return <VtStopWidget key={new Date().now} props={depBoard}></VtStopWidget>
+                    {departureBoards.map((depBoard, i) => {
+                      return <VtStopWidget key={i} props={depBoard}></VtStopWidget>
                     // depBoard.DepartureBoard.Departure[0].stopid + 
                     })}
                 </View>
