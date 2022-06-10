@@ -1,6 +1,6 @@
 import React, {Component, useState, useEffect} from 'react';
 import axios from 'axios';
-import { SafeAreaView, View, Text, ScrollView, Button, Linking } from 'react-native';
+import { SafeAreaView, View, Text, ScrollView, RefreshControl, Button, Linking } from 'react-native';
 import styles from './ScreenStyle.js'
 import VtStopWidget from '../widgets/VtStopWidget.js';
 import { getData, storeData } from '../DataStorage.js';
@@ -10,6 +10,75 @@ import { usePromiseTracker, trackPromise } from "react-promise-tracker";
 import qs from 'qs-stringify';
 import VTkey from '../APIKey.js';
 import locationHandler from '../LocationHandler.js';
+
+
+
+function TransportScreen() {
+    const [stationSearch, setStationSearch] = useState([]);
+    const [departureBoards, setDepartureBoards] = useState([]);
+    const [nearestStop, setNearestStop] = useState([]);
+    const [location, setLocation] = useState([]);
+    const [refreshing, setRefreshing] = useState(false);
+    
+    useEffect(() => {
+      let mounted = true;
+
+      if(mounted) {
+        setRefreshing(true);
+        GenerateAndStoreToken();
+
+        trackPromise( locationHandler().then((res) => {
+          setLocation(res);
+          GetNearestStop(res.coords.latitude, res.coords.longitude).then(res => {
+            setDepartureBoards([]);
+
+            let stations = res.res.data.LocationList.StopLocation;
+            let uniqueStations = getUniqueStations(stations);
+            uniqueStations.map(station => {
+              GetDepatureBoard(station).then(depBoard => {
+                setDepartureBoards(depBoards => [...depBoards, depBoard.res.data]);
+                setRefreshing(false);
+              })
+            })
+
+          })
+          .catch();
+        }));
+        console.log("rerender time");
+      }
+
+      mounted = false;
+
+      return () => {
+        mounted = false;
+      }
+    }, []);
+
+    return (
+        <SafeAreaView style={styles.container}>
+            <ScrollView 
+              refreshControl={
+                <RefreshControl
+                  refreshing={refreshing}
+                  //onRefresh={}
+                />
+              }>
+                <Text style={styles.headerText}>Kollektivtrafik 🚍</Text>
+                <View style={styles.widgetArea}>
+                    {/* <Button title="Hej" onPress={() => Linking.openURL('vaesttrafik://query?Z=Korsv%C3%A4gen%2C+G%C3%B6teborg&start')}> </Button> */}
+                    
+                    <LoadingIndicator/>
+                    
+                    {departureBoards.map(depBoard => {
+                      return <VtStopWidget key={new Date().now} props={depBoard}></VtStopWidget>
+                    // depBoard.DepartureBoard.Departure[0].stopid + 
+                    })}
+                </View>
+            </ScrollView>
+        </SafeAreaView>
+    );
+}
+
 
 // Helper functions 
 function DateToFormattedString(d) {         
@@ -62,11 +131,12 @@ const getToken = async () => {
 
 function GenerateAndStoreToken() {
     getData('@tokenDataVT').then((res) => {
-        if(res === null || res.expiry < Date.now()) {
-          getToken().then(token => {
-            storeData('@tokenDataVT', token)
-          });
-        };
+      // Get new token if expired 
+      if(res === null || res.expiry <= Date.now()) {
+        getToken().then(token => {
+          storeData('@tokenDataVT', token)
+        });
+      };
     });
 };
 
@@ -127,67 +197,14 @@ const GetNearestStop = async (GPSlat, GPSlon) => {
 }
 
 const LoadingIndicator = props => {
-    const { promiseInProgress } = usePromiseTracker();
-  
-     return (
-      promiseInProgress && 
-      <Text>Hämtar västtrafik data</Text>
-    );  
-   }
-
-function TransportScreen() {
-    const [stationSearch, setStationSearch] = useState([]);
-    const [departureBoards, setDepartureBoards] = useState([]);
-    const [nearestStop, setNearestStop] = useState([]);
-    const [location, setLocation] = useState([]);
-    
-    useEffect(() => {
-      let mounted = true;
-
-      if(mounted) {
-        GenerateAndStoreToken();
-
-        trackPromise( locationHandler().then((res) => {
-          setLocation(res);
-          GetNearestStop(res.coords.latitude, res.coords.longitude).then(res => {
-            setDepartureBoards([]);
-
-            let stations = res.res.data.LocationList.StopLocation;
-            let uniqueStations = getUniqueStations(stations);
-            uniqueStations.map(station => {
-              GetDepatureBoard(station).then(depBoard => {
-                setDepartureBoards(depBoards => [...depBoards, depBoard.res.data]);
-              })
-            })
-
-          });
-        }));
-        console.log("rerender time");
-
-      }
-      mounted = false;
-
-      return () => {
-        mounted = false;
-      }
-    }, []);
+  const { promiseInProgress } = usePromiseTracker();
 
     return (
-        <SafeAreaView style={styles.container}>
-            <ScrollView>
-                <Text style={styles.headerText}>Kollektivtrafik 🚍</Text>
-                <View style={styles.widgetArea}>
-                    {/* <Button title="Hej" onPress={() => Linking.openURL('vaesttrafik://query?Z=Korsv%C3%A4gen%2C+G%C3%B6teborg&start')}> </Button> */}
-                    
-                    <LoadingIndicator/>
-                    
-                    {departureBoards.map(depBoard => {
-                      return <VtStopWidget key={depBoard.DepartureBoard.Departure[0].stopid + new Date().now} props={depBoard}></VtStopWidget>
-                    })}
-                </View>
-            </ScrollView>
-        </SafeAreaView>
-    );
+    promiseInProgress && 
+    <Text>Hämtar västtrafik data</Text>
+  );  
 }
+
+
 
 export default TransportScreen;
