@@ -32,14 +32,18 @@ function TransportScreen() {
           GetNearestStop(res.coords.latitude, res.coords.longitude).then(res => {
             setDepartureBoards([]);
 
-            let stations = res.res.data.LocationList.StopLocation;
-            let uniqueStations = getUniqueStations(stations);
-            uniqueStations.map(station => {
-              GetDepatureBoard(station).then(depBoard => {
-                setDepartureBoards(depBoards => [...depBoards, depBoard.res.data]);
-                setRefreshing(false);
+            // Only proceed if we data from the api
+            if (res.res.data) {
+              let stations = res.res.data.LocationList.StopLocation;
+              let uniqueStations = getUniqueStations(stations);
+              uniqueStations.map(station => {
+                GetDepatureBoard(parseInt(station)).then(depBoard => {
+                  setDepartureBoards(depBoards => [...depBoards, depBoard.res.data]);
+                  setRefreshing(false);
+                })
               })
-            })
+            }
+            
 
           })
           .catch();
@@ -82,26 +86,35 @@ function TransportScreen() {
 
 // Helper functions 
 function DateToFormattedString(d) {         
-  var yyyy = d.getFullYear().toString();                                    
-  var mm = (d.getMonth()+1).toString(); // getMonth() is zero-based         
-  var dd  = d.getDate().toString();             
+  let yyyy = d.getFullYear().toString();                                    
+  let mm = (d.getMonth()+1).toString(); // getMonth() is zero-based         
+  let dd  = d.getDate().toString();
 
-  return yyyy + '-' + (mm[1] ? mm : "0" + mm[0]) + '-' + (dd[1] ? dd : "0" + dd[0]);
+  let mmString = (mm[1] ? mm : "0" + mm[0]);
+  let ddString = (dd[1] ? dd : "0" + dd[0]);
+
+  return yyyy + '-' + mmString + '-' + ddString;
 };  
 
 function getUniqueStations(stations) {
-  let uniqueStations = [];
+  let uniqueStations = new Map();
+
   stations.map(station => {
-    let stationID = parseInt(station.id);
-    // Checks if station starts with 9021. If 21 it's a real station and 9022 is a track of a station.
-    if (stationID - 9021000000000000 < 1000000000000) { 
-      if (uniqueStations.indexOf(stationID) == -1) {
-        uniqueStations.push(stationID);
-      }
+    
+    // Get station id without track id at the end
+    let IDlength = station.id.length;
+    if (IDlength > 4) {
+      var stationID = station.id.substr(0, IDlength - 4) + "0000";
+    }
+
+    // Add station to map if not already in map
+    if (!uniqueStations.has(station.name)) {
+      uniqueStations.set(station.name, stationID);
     }
     
   });
-  return uniqueStations;
+
+  return Array.from(uniqueStations.values());
 }
 // Helper funtions END
 
