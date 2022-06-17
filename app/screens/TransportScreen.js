@@ -29,7 +29,7 @@ function TransportScreen() {
       trackPromise( locationHandler().then((res) => {
         setLocation(res);
         GetNearestStop(res.coords.latitude, res.coords.longitude).then(res => {
-          setDepartureBoards([]);
+          setDepartureBoards([]); // Might want to update data rather than clearing and fetching new
 
           // Only proceed if we data from the api
           if (typeof res.res.data !== undefined) {
@@ -45,7 +45,7 @@ function TransportScreen() {
           }
         })
       }));
-      
+
       setRefreshing(false);
     }, [refreshing]);
 
@@ -79,7 +79,7 @@ function TransportScreen() {
                     <LoadingIndicator/>
                     
                     {departureBoards.map((depBoard) => {
-                      return <VtStopWidget key={depBoard.DepartureBoard.Departure[0].stop} props={depBoard}></VtStopWidget> 
+                      return <VtStopWidget key={depBoard.DepartureBoard.Departure[0].stop} depBoardData={depBoard}></VtStopWidget> 
                     })}
                 </View>
             </ScrollView>

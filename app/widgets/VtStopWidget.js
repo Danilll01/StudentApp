@@ -8,7 +8,7 @@ function getDepTimeDiff(date, time) {
     var d = moment.duration(ms);
     var s;
     if (d.asMinutes() <= 0) {
-        s = "Avgått"
+        s = "Nu"
       } else if(d.hours() !== 0) {
         s = time;
        } else {
@@ -25,21 +25,21 @@ function VtStopWidget(props) {
         
         if(mounted) {
             setDepartureList([]);
-            if (Object.keys(props).length != 0) {
-            if (Object.keys(props.props).length > 0) {
+            let depBoardData = props.depBoardData;
+            
+            //if (typeof depBoardData !== undefined) {
                 //console.log(props);
                 //console.log(props.props.DepartureBoard.Departure.slice(0, 5));
-                if (typeof props.props.DepartureBoard.Departure !== undefined) {
-                    setDepartureList(props.props.DepartureBoard.Departure.slice(0,6));
-                }
-            };
+                if (typeof depBoardData.DepartureBoard.Departure !== undefined) {
+                    setDepartureList(depBoardData.DepartureBoard.Departure.slice(0,6));
+                };
+            //};
         };
         
-       mounted = false;
-       return () => {
         mounted = false;
-      }
-    }
+        return () => {
+            mounted = false;
+        }
     }, [props])
     
     
@@ -50,7 +50,7 @@ function VtStopWidget(props) {
             </Text>
             {departureList.map((ride) => {
                 return (
-                <View style={VtStopWidgetStyle.rideItem} key={ride.journeyid}>
+                <View style={VtStopWidgetStyle.rideItem} key={ride.journeyid + ride.stopid}>
                     <View style={{backgroundColor: ride.bgColor, width: 45, height: 33, borderRadius: 5, justifyContent: 'center'}}>
                         <Text style={{color: ride.fgColor, textAlign: 'center', fontWeight: 'bold', fontSize: 14,}}>{ride.sname}</Text>
                     </View>
