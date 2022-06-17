@@ -48,10 +48,10 @@ function VtStopWidget(props) {
             <Text h1 style={styles.basicWidgetHeader}>
                 {(typeof departureList === undefined) || (departureList.length == 0) ? "test" : departureList[0].stop.split(',')[0]}
             </Text>
-            {departureList.map((ride, i) => {
+            {departureList.map((ride) => {
                 return (
-                <View style={VtStopWidgetStyle.rideItem} key={"SID" + ride.stopid + "JID" + ride.journeyid}>
-                    <View style={{backgroundColor: ride.bgColor, width: 45, height: 33, borderRadius: 5, justifyContent: 'center'}} key={i}>
+                <View style={VtStopWidgetStyle.rideItem} key={ride.journeyid}>
+                    <View style={{backgroundColor: ride.bgColor, width: 45, height: 33, borderRadius: 5, justifyContent: 'center'}}>
                         <Text style={{color: ride.fgColor, textAlign: 'center', fontWeight: 'bold', fontSize: 14,}}>{ride.sname}</Text>
                     </View>
                     <Text style={VtStopWidgetStyle.rideName}>{"Mot " + ride.direction}</Text>
