@@ -1,4 +1,4 @@
-import React, {Component, useState, useEffect} from 'react';
+import React, {Component, useState, useEffect, useCallback} from 'react';
 import axios from 'axios';
 import { SafeAreaView, View, Text, ScrollView, RefreshControl, Button, Linking } from 'react-native';
 import styles from './ScreenStyle.js'
@@ -18,37 +18,42 @@ function TransportScreen() {
     const [departureBoards, setDepartureBoards] = useState([]);
     const [nearestStop, setNearestStop] = useState([]);
     const [location, setLocation] = useState([]);
-    const [refreshing, setRefreshing] = useState(false);
+    const [refreshing, setRefreshing] = useState();
     
+    const refreshJourneys = React.useCallback(async () => {
+      setRefreshing(true);
+      console.log("Refreshing journeys");
+
+      GenerateAndStoreToken();
+
+      trackPromise( locationHandler().then((res) => {
+        setLocation(res);
+        GetNearestStop(res.coords.latitude, res.coords.longitude).then(res => {
+          setDepartureBoards([]);
+
+          // Only proceed if we data from the api
+          if (typeof res.res.data !== undefined) {
+            let stations = res.res.data.LocationList.StopLocation;
+            let uniqueStations = getUniqueStations(stations);
+            console.log(uniqueStations)
+            uniqueStations.map(station => {
+              GetDepatureBoard(parseInt(station)).then(depBoard => {
+                setDepartureBoards(depBoards => [...depBoards, depBoard.res.data]);
+                
+              })
+            })
+          }
+        })
+      }));
+      
+      setRefreshing(false);
+    }, [refreshing]);
+
     useEffect(() => {
       let mounted = true;
 
       if(mounted) {
-        setRefreshing(true);
-        GenerateAndStoreToken();
-
-        trackPromise( locationHandler().then((res) => {
-          setLocation(res);
-          GetNearestStop(res.coords.latitude, res.coords.longitude).then(res => {
-            setDepartureBoards([]);
-
-            // Only proceed if we data from the api
-            if (res.res.data) {
-              let stations = res.res.data.LocationList.StopLocation;
-              let uniqueStations = getUniqueStations(stations);
-              uniqueStations.map(station => {
-                GetDepatureBoard(parseInt(station)).then(depBoard => {
-                  setDepartureBoards(depBoards => [...depBoards, depBoard.res.data]);
-                  setRefreshing(false);
-                })
-              })
-            }
-            
-
-          })
-          .catch();
-        }));
-        console.log("rerender time");
+        refreshJourneys();
       }
 
       mounted = false;
@@ -64,7 +69,7 @@ function TransportScreen() {
               refreshControl={
                 <RefreshControl
                   refreshing={refreshing}
-                  //onRefresh={}
+                  onRefresh={refreshJourneys}
                 />
               }>
                 <Text style={styles.headerText}>Kollektivtrafik 🚍</Text>
@@ -73,9 +78,8 @@ function TransportScreen() {
                     
                     <LoadingIndicator/>
                     
-                    {departureBoards.map((depBoard, i) => {
-                      return <VtStopWidget key={i} props={depBoard}></VtStopWidget>
-                    // depBoard.DepartureBoard.Departure[0].stopid + 
+                    {departureBoards.map((depBoard) => {
+                      return <VtStopWidget key={depBoard.DepartureBoard.Departure[0].stop} props={depBoard}></VtStopWidget> 
                     })}
                 </View>
             </ScrollView>
@@ -100,20 +104,13 @@ function getUniqueStations(stations) {
   let uniqueStations = new Map();
 
   stations.map(station => {
-    
-    // Get station id without track id at the end
-    let IDlength = station.id.length;
-    if (IDlength > 4) {
-      var stationID = station.id.substr(0, IDlength - 4) + "0000";
-    }
-
     // Add station to map if not already in map
     if (!uniqueStations.has(station.name)) {
-      uniqueStations.set(station.name, stationID);
+      uniqueStations.set(station.name, station.id);
     }
     
   });
-
+  
   return Array.from(uniqueStations.values());
 }
 // Helper funtions END
@@ -164,7 +161,9 @@ const GetDepatureBoard = async (stopId) => {
     time: new Date().toTimeString().split(':').slice(0,2).join(':'), // HH:mm
     timeSpan: 120,
     format: "json",
+    needJourneyDetail: 0,
   });
+  
   let res = await CallVTAPIWithPayload(APIEndpoint, payload);
   return {res};
 }
@@ -173,9 +172,9 @@ const GetNearestStop = async (GPSlat, GPSlon) => {
   let APIEndpoint = "https://api.vasttrafik.se/bin/rest.exe/v2/location.nearbystops?";
 
   let payload = qs({
-    originCoordLat: GPSlat,
-    originCoordLong: GPSlon,
-    maxNo: 20,
+    originCoordLat: GPSlat,  // 57.706717, Test location
+    originCoordLong: GPSlon, // 11.968428,
+    maxNo: 100,
     format: "json",
   });
 
