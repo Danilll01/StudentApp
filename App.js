@@ -11,17 +11,7 @@ import FoodScreen from './app/screens/FoodScreen';
 
 const Tab = createBottomTabNavigator();
 
-// JSON.stringify({ stations: [10, undefined, function(){}, Symbol('')] })
-
-
-
 export default function App() {
-  
-  
-  //getData('@tokenDataVT').then((res) => {console.log(res)});
-  //storeData(getToken(VTkey))
-  //console.log(getData())
-
   return (
     // <SafeAreaView style={styles.container}>
     //   <Text numberOfLines={2}>Open up App.js to start working on your app! This is a very very long line of text to be displayed {x}</Text>
@@ -70,10 +60,15 @@ export default function App() {
               return <Ionicons name={iconName} size={size} color={color} />;
             },
           })}
+
           tabBarOptions={{
             activeTintColor: 'tomato',
             inactiveTintColor: 'gray',
           }}
+
+          initialRouteName = {
+            "Schema"
+          }
         >
         <Tab.Screen name="Transport" component={TransportScreen} />
         <Tab.Screen name="Mat" component={FoodScreen} />
