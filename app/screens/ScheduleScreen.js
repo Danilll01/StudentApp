@@ -1,11 +1,12 @@
 import React, {Component, useState, useEffect, useCallback} from 'react';
-import { Button, Image, Linking, Alert, StatusBar, Platform, Text, SafeAreaView, View, Card  } from 'react-native';
+//import { Button, Image, Linking, Alert, StatusBar, Platform, Text, SafeAreaView, View } from 'react-native';
+import { SafeAreaView } from 'react-native';
 import {Calendar, CalendarList, Agenda} from 'react-native-calendars';
 import moment from "moment";
 
 // UI library 
-//import * as eva from '@eva-design/eva';
-//import { ApplicationProvider, Layout, Text, SafeAreaView, View, Card } from '@ui-kitten/components';
+import * as eva from '@eva-design/eva';
+import { ApplicationProvider, Layout, Text, Card } from '@ui-kitten/components';
 
 import styles from './ScreenStyle.js'
 
@@ -15,7 +16,7 @@ function ScheduleScreen(props)  {
     const loadEvents = () => {
         setEvents(
             {
-                '2022-06-22': [{name: 'item 1 - any js object'}],
+                '2022-06-30': [{name: 'item 1 - any js object'}],
                 '2022-06-23': [{name: 'item 2 - any js object', height: 80}],
                 '2022-06-24': [],
                 '2022-06-25': [{name: 'item 3 - any js object'}, {name: 'any js object'}]
@@ -25,28 +26,40 @@ function ScheduleScreen(props)  {
 
     const renderItem = (item) => {
         return (
-            //<Card title={"Hej"}>
-                <Text>Hello</Text>
-            //</Card>
+            <ApplicationProvider {...eva} theme={eva.dark}>
+                <Card>
+                    <Text>Hello</Text>
+                </Card>
+            </ApplicationProvider>
         );
     }
 
 
     return (
         
-        //<ApplicationProvider {...eva} theme={eva.light}>
+        <ApplicationProvider {...eva} theme={eva.dark}>
             <SafeAreaView style={styles.container}>
-                <Text style={styles.headerText}>Schema!</Text>
-                <Agenda
-                    items={events}
-                    loadItemsForMonth={loadEvents}
-                    selected={moment().format("YYYY-MM-DD")}
-                    renderItem={renderItem}
-                />
+                <Layout style={{flex: 1}}>
+                    <Text style={styles.headerText}>Schema!</Text>
+                    <Agenda
+                        items={events}
+                        minDate={'2022-05-10'}
+                        pastScrollRange={25}
+                        futureScrollRange={25}
+                        loadItemsForMonth={loadEvents}
+                        selected={moment().format("YYYY-MM-DD")}
+                        renderItem={renderItem}
+                        theme={{
+                            backgroundColor: eva.dark['background-basic-color-4'],
+                            calendarBackground: eva.dark['background-basic-color-1'],
+                            textSectionTitleColor: '#b6c1cd',
+                            textSectionTitleDisabledColor: '#d9e1e8'
+                          }}
+                    />
+                </Layout>
+                
             </SafeAreaView>
-        //</ApplicationProvider>
-        
-        
+        </ApplicationProvider>
     );
 }
 
