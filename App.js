@@ -72,7 +72,7 @@ export default function App() {
                 }}
 
                 initialRouteName = {
-                "Schema"
+                "Mat"
                 }
             >
             <Tab.Screen name="Transport" component={TransportScreen} />
