@@ -1,17 +1,20 @@
 import React, {Component, useState, useEffect, useCallback} from 'react';
 //import { Button, Image, Linking, Alert, StatusBar, Platform, Text, SafeAreaView, View } from 'react-native';
-import { SafeAreaView } from 'react-native';
+import { SafeAreaView, Appearance } from 'react-native';
 import {Calendar, CalendarList, Agenda} from 'react-native-calendars';
 import moment from "moment";
 
 // UI library 
 import * as eva from '@eva-design/eva';
-import { ApplicationProvider, Layout, Text, Card } from '@ui-kitten/components';
+import { ApplicationProvider, Layout, Text, Card, Button } from '@ui-kitten/components';
 
 import styles from './ScreenStyle.js'
 
 function ScheduleScreen(props)  {
     const [events, setEvents] = useState();
+    const [theme, setTheme] = useState(getColorTheme);
+
+
     
     const loadEvents = () => {
         setEvents(
@@ -26,7 +29,7 @@ function ScheduleScreen(props)  {
 
     const renderItem = (item) => {
         return (
-            <ApplicationProvider {...eva} theme={eva.dark}>
+            <ApplicationProvider {...eva} theme={theme}>
                 <Card>
                     <Text>Hello</Text>
                 </Card>
@@ -37,7 +40,7 @@ function ScheduleScreen(props)  {
 
     return (
         
-        <ApplicationProvider {...eva} theme={eva.dark}>
+        <ApplicationProvider {...eva} theme={theme}>
             <SafeAreaView style={styles.container}>
                 <Layout style={{flex: 1}}>
                     <Text style={styles.headerText}>Schema!</Text>
@@ -49,18 +52,39 @@ function ScheduleScreen(props)  {
                         loadItemsForMonth={loadEvents}
                         selected={moment().format("YYYY-MM-DD")}
                         renderItem={renderItem}
+                        showClosingKnob={true}
+                        hideExtraDays={true}
+                        /*
                         theme={{
-                            backgroundColor: eva.dark['background-basic-color-4'],
-                            calendarBackground: eva.dark['background-basic-color-1'],
-                            textSectionTitleColor: '#b6c1cd',
-                            textSectionTitleDisabledColor: '#d9e1e8'
-                          }}
+                            
+                            backgroundColor: theme['background-basic-color-4'],
+                            calendarBackground: theme['background-basic-color-1'],
+                            textSectionTitleColor: theme['color-basic-100'],
+                            dayTextColor: theme['color-basic-100'],
+                        }}
+                        
+                        */
                     />
                 </Layout>
-                
+                <Button title="Change theme" onPress={() => {
+                    if (theme === eva.dark) {
+                        setTheme(eva.light);
+                    } else {
+                        setTheme(eva.dark);
+                    }
+                }}>Change theme</Button>
             </SafeAreaView>
         </ApplicationProvider>
     );
+}
+
+function getColorTheme() {
+    const colorTheme = Appearance.getColorScheme();
+    if (colorTheme === 'dark') {
+        return eva.dark;
+    } else {
+        return eva.light;
+    }
 }
 
 export default ScheduleScreen;
