@@ -3,6 +3,8 @@ import { StyleSheet, TouchableOpacity } from 'react-native';
 import Svg, { Path } from "react-native-svg"
 
 import MeatEmoji from '../assets/emojis/Meat.js';
+import FishEmoji from '../assets/emojis/Fish.js';
+import ChickenEmoji from '../assets/emojis/Chicken.js';
 
 // UI library 
 import * as eva from '@eva-design/eva';
@@ -14,13 +16,22 @@ export default Tag = (props) => {
 
     return(
         <TouchableOpacity style={[tagStyle.tagRoot, props.active ? tagStyle.activated : null]} onPress={props.onPress}>
-            <MeatEmoji />
+            {getIcon(props.id)}
         </TouchableOpacity>
     );
 }
 
-function getImage() {
-    return null;
+function getIcon(id) {
+    switch(id) {
+        case 0:
+            return <MeatEmoji />;
+        case 1:
+            return <FishEmoji />;
+        case 2:
+            return <ChickenEmoji />;
+        default:
+            return <MeatEmoji />;
+    }
 }
 
 const tagStyle = StyleSheet.create({
