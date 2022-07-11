@@ -36,15 +36,15 @@ const recipeData = [
 function FoodScreen(props) {
     const [theme, setTheme] = useState(eva.light);
     const [search, setSearch] = useState("");
-    const [tags, setTags] = useState([{id: 0, active: false}, {id: 1, active: false}, {id: 2, active: false}]);
+    const [tags, setTags] = useState([{type: 'meat', active: false}, {type: 'fish', active: false}, {type: 'chicken', active: false}]);
 
     const updateSearch = (search) => {
         setSearch(search);
     };
 
-    const setActiveTag = (id) => {
+    const setActiveTag = (type) => {
         let updatedState = (tags.map(tag => (
-                tag.id === id
+                tag.type === type
                 ? { ...tag, active: !tag.active }
                 : { ...tag, active: false }
         )));
@@ -65,7 +65,7 @@ function FoodScreen(props) {
                 />
                 <Layout style={{flexDirection: 'row', paddingLeft: 10}}>
                     {tags.map(tag => (
-                            <Tag key={tag.id} id={tag.id} active={tag.active} onPress={() => setActiveTag(tag.id)} />
+                            <Tag key={tag.type} type={tag.type} active={tag.active} onPress={() => setActiveTag(tag.type)} />
                         )
                     )}
                 </Layout>
@@ -74,7 +74,7 @@ function FoodScreen(props) {
                             <RecipeItem key={recipe.title} recipe={recipe} />
                         )
                     )}
-                    <RecipeItem/>
+                    
                     
                 </ScrollView>
             </SafeAreaView>

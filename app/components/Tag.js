@@ -12,19 +12,19 @@ import { ApplicationProvider, Layout, Text, Card, Button } from '@ui-kitten/comp
 export default Tag = (props) => {
 
     return(
-        <TouchableOpacity style={[tagStyle.tagRoot, props.active ? tagStyle.activated : null]} onPress={props.onPress}>
-            {getIcon(props.id)}
+        <TouchableOpacity style={[tagStyle.tagRoot, props.active ? tagStyle.activated : null]} onPress={props.onPress} disabled={props.nonInteractable}>
+            {getIcon(props.type)}
         </TouchableOpacity>
     );
 }
 
-function getIcon(id) {
-    switch(id) {
-        case 0:
+function getIcon(type) {
+    switch(type) {
+        case 'meat':
             return <MeatEmoji />;
-        case 1:
+        case 'fish':
             return <FishEmoji />;
-        case 2:
+        case 'chicken':
             return <ChickenEmoji />;
         default:
             return <MeatEmoji />;
