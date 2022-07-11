@@ -1,6 +1,5 @@
 import React, { useState, useEffect} from 'react';
 import { StyleSheet, TouchableOpacity } from 'react-native';
-import Svg, { Path } from "react-native-svg"
 
 import MeatEmoji from '../assets/emojis/Meat.js';
 import FishEmoji from '../assets/emojis/Fish.js';
@@ -11,8 +10,6 @@ import * as eva from '@eva-design/eva';
 import { ApplicationProvider, Layout, Text, Card, Button } from '@ui-kitten/components';
 
 export default Tag = (props) => {
-    const [active, setActive] = useState(false);
-
 
     return(
         <TouchableOpacity style={[tagStyle.tagRoot, props.active ? tagStyle.activated : null]} onPress={props.onPress}>
