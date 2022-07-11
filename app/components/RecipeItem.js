@@ -1,11 +1,15 @@
 import React, { useState, useEffect} from 'react';
 import { StyleSheet, TouchableHighlight, Image, Pressable  } from 'react-native';
 
+import Tag from '../components/Tag';
+
 // UI library 
 import * as eva from '@eva-design/eva';
 import { ApplicationProvider, Layout, Text, Card, Button } from '@ui-kitten/components';
 
 export default RecipeItem = (props) => {
+    const recipeData = props.recipe;
+
     const [isPressed, setIsPressed] = useState(false);
 
     const pressStart = () => {
@@ -22,11 +26,17 @@ export default RecipeItem = (props) => {
             onPressOut={pressEnd}>
             
                 <Image></Image>
+                
                 <Layout style={recipeStyle.titleDiv}>
-                    <Text category='h6'>Lättlagad fisk i ugnen</Text>
-                    <Text category='h6' style={{marginLeft: 'auto'}}>20 min</Text>
+                    <Text category='h6'>{recipeData.title}</Text>
+                    <Text category='h6' style={{marginLeft: 'auto'}}>{recipeData.cookTime} min</Text>
                 </Layout>
-            
+                <Layout style={{backgroundColor: 'transparent'}}>
+                    {recipeData.tags.map((tag, index) => (
+                            <Tag key={index} type={tag} active={false} nonInteractable={true} />
+                        )
+                    )}
+                </Layout>
         </Pressable >
     );
 }
