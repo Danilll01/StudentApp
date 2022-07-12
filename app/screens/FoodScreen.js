@@ -13,8 +13,29 @@ import { ApplicationProvider, Layout, Text, Card, Button } from '@ui-kitten/comp
 
 const recipeData = [
     {
+        id: 0,
         title: "Lättlagad lax i ugn",
         cookTime: 40,
+        image: "image",
+        tags: ["fish"], //"meat", "chicken"
+        servings: 2,
+        ingredients: [
+            {
+                amount: 400,
+                unit: "g",
+                name: "Laxfile"
+            },
+            {
+                amount: 1,
+                unit: "st",
+                name: "Citron"
+            }
+        ],
+    },
+    {
+        id: 1,
+        title: "Lättlagad torsk i ugn",
+        cookTime: 20,
         image: "image",
         tags: ["fish"], //"meat", "chicken"
         servings: 2,
@@ -71,11 +92,9 @@ function FoodScreen(props) {
                 </Layout>
                 <ScrollView style={{padding: 20, }}>
                     {recipeData.map(recipe => (
-                            <RecipeItem key={recipe.title} recipe={recipe} />
+                            <RecipeItem key={recipe.id} recipe={recipe} />
                         )
                     )}
-                    
-                    
                 </ScrollView>
             </SafeAreaView>
         </ApplicationProvider>
