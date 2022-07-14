@@ -4,11 +4,11 @@ import { Appearance } from 'react-native';
 export const themeSlice = createSlice({
   name: 'theme',
   initialState: {
-    isDarkmode: Appearance.getColorScheme() === 'dark',
+    currentTheme: Appearance.getColorScheme(),
   },
   reducers: {
     toggleTheme(state) {
-        state.isDarkmode = !state.isDarkmode;
+        state.currentTheme = state.currentTheme === 'dark' ? 'light' : 'dark';
     },
   },
 })
