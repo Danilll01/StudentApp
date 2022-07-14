@@ -1,4 +1,4 @@
-import React, { useState, useEffect} from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { Appearance, Button, SafeAreaView, StyleSheet, TouchableOpacity, View, Image, Linking, Alert, StatusBar, Platform } from 'react-native';
 
 import { NavigationContainer } from '@react-navigation/native';
@@ -35,27 +35,23 @@ export default function AppWrapper() {
 }
 
 function App(props) {
-    
+    const [reloadTheme, setReloadTheme] = useState(false);
     //const [isDarkmode, setIsDarkmode] = useState(false);
     const theme = useSelector((state) => state.theme);
 
     const dispatch = useDispatch();
-
-    if (firstLoad) {
-        Appearance.addChangeListener(({ colorScheme }) => {
-            //setIsDarkmode(colorScheme === 'dark');
-            dispatch(toggleTheme());
-            console.log("Color is: " + colorScheme);
-        });
-        firstLoad = false;
-    }
-
-    /*
+    
+    const handleColorSchemeChange = useCallback((theme) => {
+        dispatch(toggleTheme());
+        setReloadTheme(!reloadTheme);
+    }, []);
+    
     useEffect(() => {
-        Store.dispatch(darkModeOn(true));
-    }
-    , [isDarkmode]);
-    */
+        Appearance.addChangeListener(handleColorSchemeChange);
+        return () => {
+        Appearance.removeChangeListener(handleColorSchemeChange);
+        };
+    }, [handleColorSchemeChange]);
 
     return (
         // <SafeAreaView style={styles.container}>
@@ -67,8 +63,8 @@ function App(props) {
         //   </TouchableOpacity>
         //   <Button title="Hej" onPress={() => Linking.openURL('canvas-courses://chalmers.instructure.com/courses/15148')}> </Button>
         // </SafeAreaView>
-        <ApplicationProvider {...eva} theme={theme.isDarkmode ? eva.dark : eva.light}>
-            <Text style={{paddingTop: 50}}>Hello this is {theme.isDarkmode ? "Jaaa" : "nej"}</Text>
+        <ApplicationProvider {...eva} theme={eva[theme.currentTheme]}>
+            <Text style={{paddingTop: 50}}>Hello this is </Text>
             <NavigationContainer>
                 <StatusBar barStyle={Platform.OS === 'ios' ? "dark-content" : "light-content"} />
                 <Tab.Navigator screenOptions={({ route }) => ({
@@ -97,7 +93,7 @@ function App(props) {
                         activeTintColor: 'tomato',
                         inactiveTintColor: 'gray',
                         tabStyle: {
-                            backgroundColor: theme.isDarkmode ? '#000' : '#fff',
+                            backgroundColor: eva[theme.currentTheme]['background-basic-color-1'],
                         },
                     }}
 
