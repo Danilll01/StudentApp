@@ -8,7 +8,7 @@ import RecipeItem from '../components/RecipeItem';
 
 // UI library 
 import * as eva from '@eva-design/eva';
-import { ApplicationProvider, Layout, Text, Card, Button } from '@ui-kitten/components';
+import { ApplicationProvider, Layout, Text, Card, Button, useTheme } from '@ui-kitten/components';
 
 
 const recipeData = [
@@ -55,7 +55,8 @@ const recipeData = [
 ]
 
 function FoodScreen(props) {
-    const [theme, setTheme] = useState(eva.light);
+    //const [theme, setTheme] = useState(eva.light);
+    const theme = useTheme();
     const [search, setSearch] = useState("");
     const [tags, setTags] = useState([{type: 'meat', active: false}, {type: 'fish', active: false}, {type: 'chicken', active: false}]);
 
@@ -74,8 +75,8 @@ function FoodScreen(props) {
     }
 
     return (
-        <ApplicationProvider {...eva} theme={theme}>
-            <SafeAreaView style={styles.container}>
+        
+            <SafeAreaView style={[styles.container, {backgroundColor: theme['background-basic-color-1']}]}>
                 <Text style={styles.headerText} category='h1'>Vad vill du äta idag?</Text>
                 <SearchBar 
                     platform={Platform.OS}
@@ -83,6 +84,8 @@ function FoodScreen(props) {
                     onChangeText={updateSearch}
                     value={search}
                     onCancel={() => setSearch("")}
+                    lightTheme={true}
+                    containerStyle={{ backgroundColor: theme['background-basic-color-1']}}
                 />
                 <Layout style={{flexDirection: 'row', paddingLeft: 10}}>
                     {tags.map(tag => (
@@ -90,14 +93,13 @@ function FoodScreen(props) {
                         )
                     )}
                 </Layout>
-                <ScrollView style={{padding: 20, }}>
+                <ScrollView style={{padding: 20, backgroundColor: theme['background-basic-color-1']}}>
                     {recipeData.map(recipe => (
                             <RecipeItem key={recipe.id} recipe={recipe} />
                         )
                     )}
                 </ScrollView>
             </SafeAreaView>
-        </ApplicationProvider>
     );
 }
 

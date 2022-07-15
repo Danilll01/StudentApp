@@ -5,7 +5,6 @@ const sideMargin = '5%';
 export default StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#FFF',
     paddingTop: Platform.OS === "android" ? StatusBar.currentHeight : 0,
   },
   headerText: {
