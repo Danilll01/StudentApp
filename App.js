@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { Appearance, Button, SafeAreaView, StyleSheet, TouchableOpacity, View, Image, Linking, Alert, StatusBar, Platform } from 'react-native';
+import { LogBox, Appearance, Button, SafeAreaView, StyleSheet, TouchableOpacity, View, Image, Linking, Alert, StatusBar, Platform } from 'react-native';
 
 import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
@@ -11,7 +11,7 @@ import { Provider, useDispatch, useSelector } from 'react-redux';
 import { toggleTheme } from './app/redux/themeSlice';
 
 // UI library
-import { ApplicationProvider, Layout, Text, Card } from '@ui-kitten/components';
+import { ApplicationProvider, Layout, Text, Card, BottomNavigation, BottomNavigationTab, Icon } from '@ui-kitten/components';
 import * as eva from '@eva-design/eva';
 
 import HomeScreen from './app/screens/HomeScreen';
@@ -19,10 +19,9 @@ import TransportScreen from './app/screens/TransportScreen';
 import FoodScreen from './app/screens/FoodScreen';
 import ScheduleScreen from './app/screens/ScheduleScreen';
 
+const { Navigator, Screen } = createBottomTabNavigator();
 
-const Tab = createBottomTabNavigator();
-
-var firstLoad = true;
+LogBox.ignoreLogs(["EventEmitter.removeListener"]);
 
 export default function AppWrapper() {
 
@@ -63,51 +62,41 @@ function App(props) {
         //   </TouchableOpacity>
         //   <Button title="Hej" onPress={() => Linking.openURL('canvas-courses://chalmers.instructure.com/courses/15148')}> </Button>
         // </SafeAreaView>
+        
         <ApplicationProvider {...eva} theme={eva[theme.currentTheme]}>
-            <Text style={{paddingTop: 50}}>Hello this is </Text>
-            <NavigationContainer>
+            <Layout style={{flex:1}}>
                 <StatusBar barStyle={Platform.OS === 'ios' ? "dark-content" : "light-content"} />
-                <Tab.Navigator screenOptions={({ route }) => ({
-                    tabBarIcon: ({ focused, color, size }) => {
-                        let iconName;
-
-                        switch (route.name){
-                        case 'Transport':
-                            iconName = 'bus-sharp';
-                            break;
-                        case 'Mat':
-                            iconName = 'fast-food';
-                            break;
-                        case 'Hem':
-                            iconName = 'home';
-                            break;
-                        default:
-                            iconName = 'fast-food';
-                        }
-
-                        return <Ionicons name={iconName} size={size} color={color} />;
-                    },
-                    })}
-
-                    tabBarOptions={{
-                        activeTintColor: 'tomato',
-                        inactiveTintColor: 'gray',
-                        tabStyle: {
-                            backgroundColor: eva[theme.currentTheme]['background-basic-color-1'],
-                        },
-                    }}
-
-                    initialRouteName = {
-                    "Mat"
-                    }
-                >
-                <Tab.Screen name="Transport" component={TransportScreen} />
-                <Tab.Screen name="Mat" component={FoodScreen} />
-                <Tab.Screen name="Hem" component={HomeScreen} />
-                <Tab.Screen name="Schema" component={ScheduleScreen} />
-                <Tab.Screen name="Att göra" component={HomeScreen} />
-                </Tab.Navigator>
-            </NavigationContainer>
+                <NavigationContainer>
+                    <Navigator initialRouteName = {"Mat"} tabBar={props => <BottomTabBar {...props} />}>
+                    <Screen name="Transport" component={TransportScreen} />
+                    <Screen name="Mat" component={FoodScreen} />
+                    <Screen name="Hem" component={HomeScreen} />
+                    <Screen name="Schema" component={ScheduleScreen} />
+                    <Screen name="Att göra" component={HomeScreen} />
+                    </Navigator>
+                    
+                </NavigationContainer>
+            </Layout>
         </ApplicationProvider>
     );
+}
+
+
+const BottomTabBar = ({ navigation, state }) => (
+    <BottomNavigation
+      selectedIndex={state.index}
+      onSelect={index => navigation.navigate(state.routeNames[index])}
+      height={70}>
+      <BottomNavigationTab title='Transport' icon={getIcon("bus-sharp")}/>
+      <BottomNavigationTab title='Mat' icon={getIcon("fast-food")}/>
+      <BottomNavigationTab title='Hem' icon={getIcon("home")}/>
+      <BottomNavigationTab title='Schema' icon={getIcon("bus-sharp")}/>
+      <BottomNavigationTab title='Att göra' icon={getIcon("bus-sharp")}/>
+    </BottomNavigation>
+  );
+
+function getIcon(name, props){
+    return (
+        <Ionicons name={name} size={25} color="tomato" style={{tintColor: 'none'}} />
+    )
 }
