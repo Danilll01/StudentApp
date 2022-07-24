@@ -13,6 +13,8 @@ import { toggleTheme } from './app/redux/themeSlice';
 // UI library
 import { ApplicationProvider, Layout, Text, Card, BottomNavigation, BottomNavigationTab, Icon } from '@ui-kitten/components';
 import * as eva from '@eva-design/eva';
+import { default as darkTheme } from './app/themes/dark.json';
+import { default as lightTheme } from './app/themes/light.json';
 
 import HomeScreen from './app/screens/HomeScreen';
 import TransportScreen from './app/screens/TransportScreen';
@@ -63,7 +65,7 @@ function App(props) {
         //   <Button title="Hej" onPress={() => Linking.openURL('canvas-courses://chalmers.instructure.com/courses/15148')}> </Button>
         // </SafeAreaView>
         
-        <ApplicationProvider {...eva} theme={eva[theme.currentTheme]}>
+        <ApplicationProvider {...eva} theme={{...eva[theme.currentTheme], ...theme.currentTheme === 'light' ? lightTheme : darkTheme}}>
             <Layout style={{flex:1}}>
                 <StatusBar barStyle={Platform.OS === 'ios' ? "dark-content" : "light-content"} />
                 <NavigationContainer>

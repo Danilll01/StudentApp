@@ -85,7 +85,7 @@ function FoodScreen(props) {
                     value={search}
                     onCancel={() => setSearch("")}
                     lightTheme={true}
-                    containerStyle={{ backgroundColor: theme['background-basic-color-4']}}
+                    containerStyle={{ backgroundColor: theme['background-basic-color-1']}}
                 />
                 <Layout style={{flexDirection: 'row', paddingLeft: 10}}>
                     {tags.map(tag => (
@@ -93,7 +93,7 @@ function FoodScreen(props) {
                         )
                     )}
                 </Layout>
-                <ScrollView style={{padding: 20, backgroundColor: theme['background-basic-color-4']}}>
+                <ScrollView style={{padding: 20, backgroundColor: theme['background-basic-color-1']}}>
                     {recipeData.map(recipe => (
                             <RecipeItem key={recipe.id} recipe={recipe} />
                         )

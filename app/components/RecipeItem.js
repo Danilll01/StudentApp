@@ -23,13 +23,13 @@ export default RecipeItem = (props) => {
     }
 
     return(
-        <Pressable style={[recipeStyle.root, isPressed ? {backgroundColor: 'grey'} : null , {backgroundColor: theme['background-basic-color-1']}]} 
+        <Pressable style={[recipeStyle.root, isPressed ? {backgroundColor: 'grey'} : null , {backgroundColor: theme['background-basic-color-3']}]} 
             onPressIn={pressStart}
             onPressOut={pressEnd}>
             
                 <Image></Image>
                 
-                <Layout style={[recipeStyle.titleDiv, {backgroundColor: theme['color-basic-500'],}]}>
+                <Layout style={[recipeStyle.titleDiv, {backgroundColor: theme['background-basic-color-2'],}]}>
                     <Text category='h6'>{recipeData.title}</Text>
                     <Text category='h6' style={{marginLeft: 'auto'}}>{recipeData.cookTime} min</Text>
                 </Layout>
@@ -50,7 +50,7 @@ const recipeStyle = StyleSheet.create({
         height: 190,
         borderRadius: 20,
         marginBottom: 14,
-        shadowColor: "#ffffff",
+        shadowColor: "#000000",
         shadowOffset: {
         width: 0,
         height: 5,
