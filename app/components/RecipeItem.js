@@ -18,8 +18,9 @@ export default RecipeItem = (props) => {
         setIsPressed(true);
     }
 
+    // Navigate to FoodDetail screen
     const pressEnd = () => {
-        props.navigation.navigate('FoodDetail', {recipe: recipeData});
+        props.navigation.navigate('Mat', {screen: 'FoodDetail', recipe: recipeData})
         setIsPressed(false);
     }
 

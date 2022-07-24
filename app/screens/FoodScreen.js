@@ -58,11 +58,12 @@ const recipeData = [
     }
 ]
 
-function FoodScreen() {
+function FoodScreen(props) {
+    
     return (
         <Stack.Navigator>
-            <Stack.Screen name="Food" component={MainScreen} />
-            <Stack.Screen name="FoodDetail" component={FoodDetail} />
+            <Stack.Screen name="Food" component={MainScreen} initialParams={props} options={{ headerShown: false }} />
+            <Stack.Screen name="FoodDetail" component={FoodDetail} initialParams={props} options={{ headerShown: false }} />
         </Stack.Navigator>
     )
 }
@@ -108,7 +109,7 @@ function MainScreen(props) {
             </Layout>
             <ScrollView style={{padding: 20, backgroundColor: theme['background-basic-color-1']}}>
                 {recipeData.map(recipe => (
-                        <RecipeItem key={recipe.id} recipe={recipe} />
+                        <RecipeItem key={recipe.id} recipe={recipe} navigation={props.navigation} />
                     )
                 )}
             </ScrollView>

@@ -8,19 +8,15 @@ import Tag from '../components/Tag';
 import * as eva from '@eva-design/eva';
 import { ApplicationProvider, Layout, Text, Card, Button, useTheme } from '@ui-kitten/components';
 
-function FoodDetail(props) {
-    let recipe = props.recipe;
+function FoodDetail({route, navigation}) {
+    let recipe = route.params.route.params.recipe;
     const theme = useTheme();
 
     return (
         <SafeAreaView >
             <ScrollView>
                 
-                <Text>{recipe.title}</Text>
-                <Text>{recipe.cookTime} minuter</Text>
-                <Text>{recipe.servings} portioner</Text>
-                <Text>{recipe.tags}</Text>
-                <Text>{recipe.ingredients}</Text>
+                <Text category='h1'>{recipe.title}</Text>
                 
             </ScrollView>
         </SafeAreaView>

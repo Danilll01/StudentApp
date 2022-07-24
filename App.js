@@ -69,7 +69,9 @@ function App(props) {
             <Layout style={{flex:1}}>
                 <StatusBar barStyle={Platform.OS === 'ios' ? "dark-content" : "light-content"} />
                 <NavigationContainer>
-                    <Navigator initialRouteName = {"Mat"} tabBar={props => <BottomTabBar {...props} />}>
+                    <Navigator initialRouteName = {"Mat"} 
+                        tabBar={props => <BottomTabBar {...props} />}
+                        screenOptions={{headerShown: false}} >
                     <Screen name="Transport" component={TransportScreen} />
                     <Screen name="Mat" component={FoodScreen} />
                     <Screen name="Hem" component={HomeScreen} />
