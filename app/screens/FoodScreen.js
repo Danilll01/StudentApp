@@ -2,14 +2,18 @@ import React, {useState} from 'react';
 import { Platform, SafeAreaView , ScrollView } from 'react-native';
 import { SearchBar } from 'react-native-elements';
 import styles from './ScreenStyle.js';
+import { createStackNavigator } from '@react-navigation/stack';
 
 import Tag from '../components/Tag';
 import RecipeItem from '../components/RecipeItem';
+import FoodDetail from './FoodDetail';
 
 // UI library 
 import * as eva from '@eva-design/eva';
 import { ApplicationProvider, Layout, Text, Card, Button, useTheme } from '@ui-kitten/components';
 
+
+const Stack = createStackNavigator();
 
 const recipeData = [
     {
@@ -54,7 +58,16 @@ const recipeData = [
     }
 ]
 
-function FoodScreen(props) {
+function FoodScreen() {
+    return (
+        <Stack.Navigator>
+            <Stack.Screen name="Food" component={MainScreen} />
+            <Stack.Screen name="FoodDetail" component={FoodDetail} />
+        </Stack.Navigator>
+    )
+}
+
+function MainScreen(props) {
     //const [theme, setTheme] = useState(eva.light);
     const theme = useTheme();
     const [search, setSearch] = useState("");
@@ -76,30 +89,30 @@ function FoodScreen(props) {
 
     return (
         
-            <SafeAreaView style={[styles.container, {backgroundColor: theme['background-basic-color-1']}]}>
-                <Text style={styles.headerText} category='h1'>Vad vill du äta idag?</Text>
-                <SearchBar 
-                    platform={Platform.OS}
-                    placeholder="Sök efter ett recept"
-                    onChangeText={updateSearch}
-                    value={search}
-                    onCancel={() => setSearch("")}
-                    lightTheme={true}
-                    containerStyle={{ backgroundColor: theme['background-basic-color-1']}}
-                />
-                <Layout style={{flexDirection: 'row', paddingLeft: 10}}>
-                    {tags.map(tag => (
-                            <Tag key={tag.type} type={tag.type} active={tag.active} onPress={() => setActiveTag(tag.type)} />
-                        )
-                    )}
-                </Layout>
-                <ScrollView style={{padding: 20, backgroundColor: theme['background-basic-color-1']}}>
-                    {recipeData.map(recipe => (
-                            <RecipeItem key={recipe.id} recipe={recipe} />
-                        )
-                    )}
-                </ScrollView>
-            </SafeAreaView>
+        <SafeAreaView style={[styles.container, {backgroundColor: theme['background-basic-color-1']}]}>
+            <Text style={styles.headerText} category='h1'>Vad vill du äta idag?</Text>
+            <SearchBar 
+                platform={Platform.OS}
+                placeholder="Sök efter ett recept"
+                onChangeText={updateSearch}
+                value={search}
+                onCancel={() => setSearch("")}
+                lightTheme={true}
+                containerStyle={{ backgroundColor: theme['background-basic-color-1']}}
+            />
+            <Layout style={{flexDirection: 'row', paddingLeft: 10}}>
+                {tags.map(tag => (
+                        <Tag key={tag.type} type={tag.type} active={tag.active} onPress={() => setActiveTag(tag.type)} />
+                    )
+                )}
+            </Layout>
+            <ScrollView style={{padding: 20, backgroundColor: theme['background-basic-color-1']}}>
+                {recipeData.map(recipe => (
+                        <RecipeItem key={recipe.id} recipe={recipe} />
+                    )
+                )}
+            </ScrollView>
+        </SafeAreaView>
     );
 }
 

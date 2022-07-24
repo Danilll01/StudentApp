@@ -19,6 +19,7 @@ export default RecipeItem = (props) => {
     }
 
     const pressEnd = () => {
+        props.navigation.navigate('FoodDetail', {recipe: recipeData});
         setIsPressed(false);
     }
 
@@ -27,18 +28,18 @@ export default RecipeItem = (props) => {
             onPressIn={pressStart}
             onPressOut={pressEnd}>
             
-                <Image></Image>
-                
-                <Layout style={[recipeStyle.titleDiv, {backgroundColor: theme['background-basic-color-2'],}]}>
-                    <Text category='h6'>{recipeData.title}</Text>
-                    <Text category='h6' style={{marginLeft: 'auto'}}>{recipeData.cookTime} min</Text>
-                </Layout>
-                <Layout style={{backgroundColor: 'transparent'}}>
-                    {recipeData.tags.map((tag, index) => (
-                            <Tag key={index} type={tag} active={false} nonInteractable={true} />
-                        )
-                    )}
-                </Layout>
+            <Image></Image>
+            
+            <Layout style={[recipeStyle.titleDiv, {backgroundColor: theme['background-basic-color-2'],}]}>
+                <Text category='h6'>{recipeData.title}</Text>
+                <Text category='h6' style={{marginLeft: 'auto'}}>{recipeData.cookTime} min</Text>
+            </Layout>
+            <Layout style={{backgroundColor: 'transparent'}}>
+                {recipeData.tags.map((tag, index) => (
+                        <Tag key={index} type={tag} active={false} nonInteractable={true} />
+                    )
+                )}
+            </Layout>
         </Pressable >
     );
 }
@@ -52,8 +53,8 @@ const recipeStyle = StyleSheet.create({
         marginBottom: 14,
         shadowColor: "#000000",
         shadowOffset: {
-        width: 0,
-        height: 5,
+            width: 0,
+            height: 5,
         },
         shadowOpacity:  0.22,
         shadowRadius: 8.22,
