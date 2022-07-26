@@ -8,7 +8,7 @@ import * as eva from '@eva-design/eva';
 import { useTheme, ApplicationProvider, Layout, Text, Card, Button } from '@ui-kitten/components';
 
 export default RecipeItem = (props) => {
-    const recipeData = props.recipe;
+    const recipeData = props.recipe.item;
 
     const theme = useTheme();
 
@@ -20,14 +20,18 @@ export default RecipeItem = (props) => {
 
     // Navigate to FoodDetail screen
     const pressEnd = () => {
-        props.navigation.navigate('Mat', {screen: 'FoodDetail', recipe: recipeData})
         setIsPressed(false);
     }
 
     return(
         <Pressable style={[recipeStyle.root, isPressed ? {backgroundColor: 'grey'} : null , {backgroundColor: theme['background-basic-color-3']}]} 
             onPressIn={pressStart}
-            onPressOut={pressEnd}>
+            onPressOut={pressEnd}
+            onPress={(event) => {
+                if (event.target == event.currentTarget) {
+                    props.navigation.navigate('Mat', {screen: 'FoodDetail', recipe: recipeData})
+                }
+            }}>
             
             <Image></Image>
             
