@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import { Platform, SafeAreaView , ScrollView } from 'react-native';
+import { Platform, SafeAreaView , ScrollView, FlatList } from 'react-native';
 import { SearchBar } from 'react-native-elements';
 import styles from './ScreenStyle.js';
 import { createStackNavigator } from '@react-navigation/stack';
@@ -107,12 +107,12 @@ function MainScreen(props) {
                     )
                 )}
             </Layout>
-            <ScrollView style={{padding: 20, backgroundColor: theme['background-basic-color-1']}}>
-                {recipeData.map(recipe => (
-                        <RecipeItem key={recipe.id} recipe={recipe} navigation={props.navigation} />
-                    )
+            <FlatList style={{padding: 20, backgroundColor: theme['background-basic-color-1']}}
+                data={recipeData}
+                renderItem={recipe => (
+                    <RecipeItem key={recipe.id} recipe={recipe} navigation={props.navigation} />
                 )}
-            </ScrollView>
+                keyExtractor={recipe => recipe.id} />
         </SafeAreaView>
     );
 }
