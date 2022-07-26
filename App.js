@@ -24,6 +24,7 @@ import ScheduleScreen from './app/screens/ScheduleScreen';
 const { Navigator, Screen } = createBottomTabNavigator();
 
 LogBox.ignoreLogs(["EventEmitter.removeListener"]);
+LogBox.ignoreLogs(["Warning: Failed %s type: %s%s, prop, Invalid props.style key `tintColor` supplied to `Text`."]);
 
 export default function AppWrapper() {
 
