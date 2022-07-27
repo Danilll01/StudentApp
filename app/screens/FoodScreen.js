@@ -30,16 +30,44 @@ const recipeData = [
                 name: "Laxfile"
             },
             {
-                amount: 1,
+                amount: 1/2,
                 unit: "st",
                 name: "Citron"
+            },
+            {
+                amount: 2,
+                unit: "dl",
+                name: "Creme fraiche"
+            },
+            {
+                amount: 300,
+                unit: "g",
+                name: "Potatis"
+            },
+            {
+                amount: 1,
+                unit: "st",
+                name: "Dillvippa"
+            },
+            {
+                amount: null,
+                unit: "",
+                name: "Salt och peppar"
             }
+        ],
+        instructions: [
+            "Sätt ugnen på 200 grader",
+            "Blanda creme fraiche, citron, salt och peppar",
+            "Bred på blandningen på laxen",
+            "Lägg på dillvippan på laxen",
+            "Sätt in laxen i ca 25 minuter i ugnen",
+            "Skala och koka potatisen",
         ],
     },
     {
         id: 1,
         title: "Lättlagad torsk i ugn",
-        cookTime: 20,
+        cookTime: 30,
         image: "image",
         tags: ["fish"], //"meat", "chicken"
         servings: 2,
@@ -54,6 +82,14 @@ const recipeData = [
                 unit: "st",
                 name: "Citron"
             }
+        ],
+        instructions: [
+            "Sätt ugnen på 200 grader",
+            "Bred på creme fraiche på torsken",
+            "Pressa ut citronen över torsken",
+            "Lägg på dillvippan på torsken",
+            "Sätt in torsken i ca 25 minuter i ugnen",
+            "Skala och koka potatisen",
         ],
     }
 ]
