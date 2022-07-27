@@ -2,6 +2,8 @@ import React, {useState} from 'react';
 import { Platform, SafeAreaView , ScrollView, Image } from 'react-native';
 import DropDownPicker from 'react-native-dropdown-picker'
 
+import { useDispatch, useSelector } from 'react-redux';
+
 import Tag from '../components/Tag';
 
 // UI library 
@@ -26,25 +28,32 @@ const servingsChoises = [
 
 function FoodDetail({route, navigation}) {
     let recipe = route.params.route.params.recipe;
-    const theme = useTheme();
+    const themeStyle = useTheme();
+    const theme = useSelector((state) => state.theme).currentTheme;
+    
     const [pickerOpen, setPickerOpen] = useState(false);
     const [currentServings, setCurrentServings] = useState(recipe.servings);
 
     return (
-        <SafeAreaView style={{flex: 1, backgroundColor: theme['background-basic-color-1']}}>
+        <SafeAreaView style={{flex: 1, backgroundColor: themeStyle['background-basic-color-1']}}>
             <ScrollView scrollEnabled={!pickerOpen}>
                 <Image source={FishImage} style={{width: '100%', height: 200}} />
                 <Text category='h1'>{recipe.title}</Text>
-                <Text category='h5'>Ingredienser för {
-                    <DropDownPicker style={{width: 60, flex: 1}} 
+                <Layout style={{flex: 1, flexDirection: 'row', zIndex: 100}}>
+                    <Text category='h5' style={{minHeight: 50}}>Ingredienser för </Text>
+                    <DropDownPicker style={{width: 60}}
+                        containerStyle={{width: 60}} 
                         items={servingsChoises} 
                         value={currentServings}
                         open={pickerOpen}
                         setOpen={setPickerOpen}
                         setValue={setCurrentServings}
                         placeholder=""
-                        listMode={"SCROLLVIEW"} />
-                } personer</Text>
+                        listMode={"SCROLLVIEW"}
+                        theme={theme.toUpperCase()} />
+                    <Text category='h5'> personer</Text>
+                </Layout>
+
                 {recipe.ingredients.map((ingredient, index) => (
                     <Text key={index} category='h6'>{ingredient.amount} {ingredient.unit} {ingredient.name}</Text>
                 ))}
