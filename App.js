@@ -39,7 +39,7 @@ export default function AppWrapper() {
 function App(props) {
     const [reloadTheme, setReloadTheme] = useState(false);
     //const [isDarkmode, setIsDarkmode] = useState(false);
-    const theme = useSelector((state) => state.theme);
+    const theme = useSelector((state) => state.theme).currentTheme;
 
     const dispatch = useDispatch();
     
@@ -66,9 +66,9 @@ function App(props) {
         //   <Button title="Hej" onPress={() => Linking.openURL('canvas-courses://chalmers.instructure.com/courses/15148')}> </Button>
         // </SafeAreaView>
         
-        <ApplicationProvider {...eva} theme={{...eva[theme.currentTheme], ...theme.currentTheme === 'light' ? lightTheme : darkTheme}}>
+        <ApplicationProvider {...eva} theme={{...eva[theme], ...theme === 'light' ? lightTheme : darkTheme}}>
             <Layout style={{flex:1}}>
-                <StatusBar barStyle={Platform.OS === 'ios' ? "dark-content" : "light-content"} />
+                <StatusBar barStyle={theme === 'light' ? "dark-content" : "light-content"} />
                 <NavigationContainer>
                     <Navigator initialRouteName = {"Mat"} 
                         tabBar={props => <BottomTabBar {...props} />}
