@@ -38,9 +38,15 @@ function FoodDetail({route, navigation}) {
         <SafeAreaView style={{flex: 1, backgroundColor: themeStyle['background-basic-color-1']}}>
             <ScrollView scrollEnabled={!pickerOpen}>
                 <Image source={FishImage} style={{width: '100%', height: 200}} />
-                <Text category='h1'>{recipe.title}</Text>
-                <Layout style={{flex: 1, flexDirection: 'row', zIndex: 100}}>
-                    <Text category='h5' style={{minHeight: 50}}>Ingredienser för </Text>
+                <Text category='h1' style={{paddingLeft: 5, paddingTop: 16, paddingBottom: 16}}>{recipe.title}</Text>
+                
+                <Layout>
+                    <Tag type={recipe.tags[0]} active={false} nonInteractable={true} />
+                </Layout>
+                
+                
+                <Layout style={{flex: 1, flexDirection: 'row', zIndex: 100, alignItems: 'center'}}>
+                    <Text category='h5' >Ingredienser för </Text>
                     <DropDownPicker style={{width: 60}}
                         containerStyle={{width: 60}} 
                         items={servingsChoises} 
@@ -53,11 +59,29 @@ function FoodDetail({route, navigation}) {
                         theme={theme.toUpperCase()} />
                     <Text category='h5'> personer</Text>
                 </Layout>
+                <Layout style={{flex: 1, flexDirection: 'row'}}>
+                    <Layout style={{paddingLeft: 20}}>
+                        {recipe.ingredients.map((ingredient, index) => (
+                            <Text key={index} category='h6'>{ingredient.amount} {ingredient.unit}</Text>
+                        ))}
+                    </Layout>
 
-                {recipe.ingredients.map((ingredient, index) => (
-                    <Text key={index} category='h6'>{ingredient.amount} {ingredient.unit} {ingredient.name}</Text>
-                ))}
-                <Text category=''>Det tar {recipe.cookTime} minuter</Text>
+                    <Layout>
+                        {recipe.ingredients.map((ingredient, index) => (
+                            <Text key={index} category='h6'>  -  {ingredient.name}</Text>
+                        ))}
+                    </Layout>
+                    
+                </Layout>
+
+                <Text category='h5'>Recept</Text>
+                <Layout style={{paddingLeft: 20}}>
+                    {recipe.instructions.map((step, index) => (
+                        <Text key={index} category='h6' style={{paddingBottom: 5}}>{index+1}.  {step}</Text>
+                    ))}
+                </Layout>
+                
+                <Text category=''>Tillagningstid: {recipe.cookTime} minuter</Text>
                 
             </ScrollView>
         </SafeAreaView>
