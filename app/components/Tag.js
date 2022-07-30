@@ -7,13 +7,36 @@ import ChickenEmoji from '../assets/emojis/Chicken.js';
 
 // UI library 
 import * as eva from '@eva-design/eva';
-import { ApplicationProvider, Layout, Text, Card, Button } from '@ui-kitten/components';
+import { ApplicationProvider, Layout, Text, Card, Button, useTheme } from '@ui-kitten/components';
 
 export default Tag = (props) => {
+    const themeStyle = useTheme();
+
+    
+    const defaultBGColor = themeStyle['background-basic-color-2'];
+    const activatedBGColor = themeStyle['background-basic-color-3'];
+    const BGColor = props.active ? activatedBGColor : defaultBGColor;
+
+    const rootStyle = [tagStyle.tagRoot, {backgroundColor: BGColor}];
+
+    const containerStyle = [tagStyle.tagContainer, {backgroundColor: BGColor}];
+
+    const defaultBorderStyle = {
+        borderColor: defaultBGColor,
+        borderWidth: 1.5,
+    };
+    const activatedBorderStyle = {
+        borderColor: themeStyle['border-primary-color-1'],
+        borderWidth: 1.5,
+    };
+    const borderStyle = props.active ? activatedBorderStyle : defaultBorderStyle;
 
     return(
-        <TouchableOpacity style={[tagStyle.tagRoot, props.active ? tagStyle.activated : null]} onPress={props.onPress} disabled={props.nonInteractable}>
-            {getIcon(props.type)}
+        <TouchableOpacity style={[rootStyle, borderStyle]} onPress={props.onPress} disabled={props.nonInteractable}>
+            <Layout style={containerStyle}>
+                {getIcon(props.type)}
+                <Text style={{backgroundColor: BGColor}}>15 min</Text>
+            </Layout>
         </TouchableOpacity>
     );
 }
@@ -36,16 +59,16 @@ const tagStyle = StyleSheet.create({
         display: 'flex',
         flexDirection: 'row',
         backgroundColor: '#EEEEEF',
+        borderColor: '#EEEEEF',
+        borderWidth: 1.5,
         borderRadius: 20,
         justifyContent: 'center',
         alignItems: 'center',
-        width: 52,
         height: 40,
         marginRight: 10,
     },
-    activated: {
-        backgroundColor: '#CCCCCC',
-        borderColor: '#007AFF',
-        borderWidth: 1.5,
-    }
+    tagContainer: {
+        flexDirection: 'row',
+        margin: 10,
+    },
 })
