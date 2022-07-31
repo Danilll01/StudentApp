@@ -1,4 +1,4 @@
-export const Tags = {
+const Tags = {
     MEAT: 'meat',
     FISH: 'fish',
     CHICKEN: 'chicken',
@@ -8,3 +8,5 @@ export const Tags = {
     DAIRY_FREE: 'dairyFree',
     NUT_FREE: 'nutFree',
 }
+
+export default Tags;

@@ -139,9 +139,11 @@ function MainScreen(props) {
                 containerStyle={{ backgroundColor: theme['background-basic-color-1']}}
             />
             <Layout style={{flexDirection: 'row', paddingLeft: 10}}>
-                {tags.map(tag => (
-                        <Tag key={tag.type} type={tag.type} active={tag.active} onPress={() => setActiveTag(tag.type)} />
-                    )
+                {tags.map(tag => {
+                        return (
+                            <Tag key={tag.type} type={tag.type} active={tag.active} onPress={() => setActiveTag(tag.type)} />
+                        )
+                    }
                 )}
             </Layout>
             <FlatList style={{padding: 20, backgroundColor: theme['background-basic-color-1']}}
