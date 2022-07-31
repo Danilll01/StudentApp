@@ -7,6 +7,7 @@ import { createStackNavigator } from '@react-navigation/stack';
 import Tag from '../components/Tag';
 import RecipeItem from '../components/RecipeItem';
 import FoodDetail from './FoodDetail';
+import Tags from '../constants/Tags';
 
 // UI library 
 import * as eva from '@eva-design/eva';
@@ -21,7 +22,7 @@ const recipeData = [
         title: "Lättlagad lax i ugn",
         cookTime: 40,
         image: "image",
-        tags: ["fish"], //"meat", "chicken"
+        tags: [Tags.FISH], //"meat", "chicken"
         servings: 2,
         ingredients: [
             {
@@ -69,7 +70,7 @@ const recipeData = [
         title: "Lättlagad torsk i ugn",
         cookTime: 30,
         image: "image",
-        tags: ["fish"], //"meat", "chicken"
+        tags: [Tags.FISH], //"meat", "chicken"
         servings: 2,
         ingredients: [
             {
@@ -108,7 +109,7 @@ function MainScreen(props) {
     //const [theme, setTheme] = useState(eva.light);
     const theme = useTheme();
     const [search, setSearch] = useState("");
-    const [tags, setTags] = useState([{type: 'meat', active: false}, {type: 'fish', active: false}, {type: 'chicken', active: false}]);
+    const [tags, setTags] = useState([{type: Tags.MEAT, active: false}, {type: Tags.FISH, active: false}, {type: Tags.CHICKEN, active: false}]);
 
     const updateSearch = (search) => {
         setSearch(search);

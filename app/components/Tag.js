@@ -1,6 +1,8 @@
 import React, { useState, useEffect} from 'react';
 import { StyleSheet, TouchableOpacity } from 'react-native';
 
+import Tags from '../constants/Tags';
+
 import MeatEmoji from '../assets/emojis/Meat.js';
 import FishEmoji from '../assets/emojis/Fish.js';
 import ChickenEmoji from '../assets/emojis/Chicken.js';
@@ -9,13 +11,13 @@ import ChickenEmoji from '../assets/emojis/Chicken.js';
 import * as eva from '@eva-design/eva';
 import { ApplicationProvider, Layout, Text, Card, Button, useTheme } from '@ui-kitten/components';
 
-export default Tag = (props) => {
+export default Tag = ({active, onPress, nonInteractable, type}) => {
     const themeStyle = useTheme();
 
-    
+
     const defaultBGColor = themeStyle['background-basic-color-2'];
     const activatedBGColor = themeStyle['background-basic-color-3'];
-    const BGColor = props.active ? activatedBGColor : defaultBGColor;
+    const BGColor = active ? activatedBGColor : defaultBGColor;
 
     const rootStyle = [tagStyle.tagRoot, {backgroundColor: BGColor}];
 
@@ -29,12 +31,12 @@ export default Tag = (props) => {
         borderColor: themeStyle['border-primary-color-1'],
         borderWidth: 1.5,
     };
-    const borderStyle = props.active ? activatedBorderStyle : defaultBorderStyle;
+    const borderStyle = active ? activatedBorderStyle : defaultBorderStyle;
 
     return(
-        <TouchableOpacity style={[rootStyle, borderStyle]} onPress={props.onPress} disabled={props.nonInteractable}>
+        <TouchableOpacity style={[rootStyle, borderStyle]} onPress={onPress} disabled={nonInteractable}>
             <Layout style={containerStyle}>
-                {getIcon(props.type)}
+                {getIcon(type)}
                 <Text style={{backgroundColor: BGColor}}>15 min</Text>
             </Layout>
         </TouchableOpacity>
@@ -43,11 +45,11 @@ export default Tag = (props) => {
 
 function getIcon(type) {
     switch(type) {
-        case 'meat':
+        case Tags.MEAT:
             return <MeatEmoji />;
-        case 'fish':
+        case Tags.FISH:
             return <FishEmoji />;
-        case 'chicken':
+        case Tags.CHICKEN:
             return <ChickenEmoji />;
         default:
             return <MeatEmoji />;
