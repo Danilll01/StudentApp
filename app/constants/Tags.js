@@ -7,6 +7,7 @@ const Tags = {
     GLUTEN_FREE: 'glutenFree',
     DAIRY_FREE: 'dairyFree',
     NUT_FREE: 'nutFree',
+    TIME: 'time',
 }
 
 export default Tags;

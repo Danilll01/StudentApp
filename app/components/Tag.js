@@ -6,12 +6,13 @@ import Tags from '../constants/Tags';
 import MeatEmoji from '../assets/emojis/Meat.js';
 import FishEmoji from '../assets/emojis/Fish.js';
 import ChickenEmoji from '../assets/emojis/Chicken.js';
+import TimeEmoji from '../assets/emojis/Time.js';
 
 // UI library 
 import * as eva from '@eva-design/eva';
 import { ApplicationProvider, Layout, Text, Card, Button, useTheme } from '@ui-kitten/components';
 
-export default Tag = ({active, onPress, nonInteractable, type}) => {
+export default Tag = ({active, onPress, nonInteractable, type, text}) => {
     const themeStyle = useTheme();
 
 
@@ -37,7 +38,7 @@ export default Tag = ({active, onPress, nonInteractable, type}) => {
         <TouchableOpacity style={[rootStyle, borderStyle]} onPress={onPress} disabled={nonInteractable}>
             <Layout style={containerStyle}>
                 {getIcon(type)}
-                <Text style={{backgroundColor: BGColor}}>15 min</Text>
+                { text && <Text style={{backgroundColor: BGColor, paddingLeft: 10, alignSelf: 'center'}}>{text}</Text> }
             </Layout>
         </TouchableOpacity>
     );
@@ -51,6 +52,8 @@ function getIcon(type) {
             return <FishEmoji />;
         case Tags.CHICKEN:
             return <ChickenEmoji />;
+        case Tags.TIME:
+            return <TimeEmoji />;
         default:
             return <MeatEmoji />;
     }
