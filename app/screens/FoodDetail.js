@@ -45,7 +45,7 @@ function FoodDetail({route, navigation}) {
                     
                     {/* Renders all tags + time to cook */}
                     <Layout style={{flexDirection: 'row'}}>
-                        <Tag type={Tags.TIME} active={false} nonInteractable={true} text={recipe.cookTime + "minuter"} />
+                        <Tag type={Tags.TIME} active={false} nonInteractable={true} text={recipe.cookTime + " minuter"} />
 
                         {recipe.tags.map((tag, index) => {
                             return <Tag key={index} type={tag.type} active={false} nonInteractable={true} />
@@ -72,7 +72,7 @@ function FoodDetail({route, navigation}) {
                     <Layout style={{flex: 1, flexDirection: 'row'}}>
                         <Layout style={{paddingLeft: 20}}>
                             {recipe.ingredients.map((ingredient, index) => (
-                                <Text key={index} category='h6'>{ingredient.amount} {ingredient.unit}</Text>
+                                <Text key={index} category='h6'>{ingredient.amount && CalculateIngredientAmount(ingredient.amount, currentServings, recipe.servings)} {ingredient.unit}</Text>
                             ))}
                         </Layout>
 
@@ -94,6 +94,11 @@ function FoodDetail({route, navigation}) {
             </ScrollView>
         </SafeAreaView>
     );
+}
+
+function CalculateIngredientAmount(amount, currentServings, designedServings) {
+    let realAmount = (amount / designedServings) * currentServings;
+    return realAmount;
 }
 
 export default FoodDetail;

@@ -105,8 +105,7 @@ function FoodScreen(props) {
     )
 }
 
-function MainScreen(props) {
-    //const [theme, setTheme] = useState(eva.light);
+function MainScreen({navigation}) {
     const theme = useTheme();
     const [search, setSearch] = useState("");
     const [tags, setTags] = useState([{type: Tags.MEAT, active: false}, {type: Tags.FISH, active: false}, {type: Tags.CHICKEN, active: false}]);
@@ -149,7 +148,7 @@ function MainScreen(props) {
             <FlatList style={{padding: 20, backgroundColor: theme['background-basic-color-1']}}
                 data={recipeData}
                 renderItem={recipe => (
-                    <RecipeItem key={recipe.id} recipe={recipe} navigation={props.navigation} />
+                    <RecipeItem key={recipe.id} recipe={recipe} navigation={navigation} />
                 )}
                 keyExtractor={recipe => recipe.id} />
         </SafeAreaView>
