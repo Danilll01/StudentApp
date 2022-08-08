@@ -3,6 +3,8 @@ import { Platform, SafeAreaView , ScrollView, Image } from 'react-native';
 import DropDownPicker from 'react-native-dropdown-picker'
 
 import { useDispatch, useSelector } from 'react-redux';
+import { getCurrentTheme } from '../redux/themeSlice';
+
 
 import Tag from '../components/Tag';
 
@@ -31,7 +33,7 @@ const servingsChoises = [
 function FoodDetail({route, navigation}) {
     let recipe = route.params.route.params.recipe;
     const themeStyle = useTheme();
-    const theme = useSelector((state) => state.theme).currentTheme;
+    const theme = useSelector(getCurrentTheme);
     
     const [pickerOpen, setPickerOpen] = useState(false);
     const [currentServings, setCurrentServings] = useState(recipe.servings);
@@ -73,7 +75,9 @@ function FoodDetail({route, navigation}) {
                     <Layout style={{flex: 1, flexDirection: 'row'}}>
                         <Layout style={{paddingLeft: 20}}>
                             {recipe.ingredients.map((ingredient, index) => (
-                                <Text key={index} category='h6'>{ingredient.amount && CalculateIngredientAmount(ingredient.amount, currentServings, recipe.servings)} {ingredient.unit}</Text>
+                                <Text key={index} category='h6'>
+                                    {ingredient.amount && CalculateIngredientAmount(ingredient.amount, currentServings, recipe.servings)} {ingredient.unit}
+                                </Text>
                             ))}
                         </Layout>
 

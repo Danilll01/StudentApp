@@ -11,7 +11,7 @@ import { Provider, useDispatch, useSelector } from 'react-redux';
 import { persistStore } from "redux-persist"
 import { PersistGate } from "redux-persist/integration/react"
 
-import { toggleTheme } from './app/redux/themeSlice';
+import { toggleTheme, getCurrentTheme } from './app/redux/themeSlice';
 
 // UI library
 import { ApplicationProvider, Layout, Text, Card, BottomNavigation, BottomNavigationTab, Icon } from '@ui-kitten/components';
@@ -47,7 +47,7 @@ export default function AppWrapper() {
 function App(props) {
     const [reloadTheme, setReloadTheme] = useState(false);
     //const [isDarkmode, setIsDarkmode] = useState(false);
-    const theme = useSelector((state) => state.persistedReducer.theme.currentTheme) ?? 'light';
+    const theme = useSelector(getCurrentTheme) ?? 'light';
 
     const dispatch = useDispatch();
     

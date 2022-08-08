@@ -15,4 +15,6 @@ export const themeSlice = createSlice({
 
 export const { toggleTheme } = themeSlice.actions;
 
+export const getCurrentTheme = state => state.persistedReducer.theme.currentTheme;
+
 export default themeSlice.reducer;
