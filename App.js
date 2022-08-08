@@ -8,6 +8,9 @@ import Ionicons from '@expo/vector-icons/Ionicons';
 // Redux
 import Store from './app/redux/store';
 import { Provider, useDispatch, useSelector } from 'react-redux';
+import { persistStore } from "redux-persist"
+import { PersistGate } from "redux-persist/integration/react"
+
 import { toggleTheme } from './app/redux/themeSlice';
 
 // UI library
@@ -23,6 +26,9 @@ import ScheduleScreen from './app/screens/ScheduleScreen';
 
 const { Navigator, Screen } = createBottomTabNavigator();
 
+// Used to store persisted state in AsyncStorage
+let persistor = persistStore(Store)
+
 LogBox.ignoreLogs(["EventEmitter.removeListener"]);
 LogBox.ignoreLogs(["Warning: Failed %s type: %s%s, prop, Invalid props.style key `tintColor` supplied to `Text`."]);
 
@@ -31,7 +37,9 @@ export default function AppWrapper() {
 
     return (
         <Provider store={Store}>
-          <App />
+            <PersistGate loading={null} persistor={persistor}>
+                <App />
+            </PersistGate>
         </Provider>
     )
 }
@@ -39,7 +47,7 @@ export default function AppWrapper() {
 function App(props) {
     const [reloadTheme, setReloadTheme] = useState(false);
     //const [isDarkmode, setIsDarkmode] = useState(false);
-    const theme = useSelector((state) => state.theme).currentTheme;
+    const theme = useSelector((state) => state.persistedReducer.theme.currentTheme) ?? 'light';
 
     const dispatch = useDispatch();
     
