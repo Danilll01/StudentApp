@@ -13,6 +13,7 @@ import { ApplicationProvider, Layout, Text, Card, Button, useTheme } from '@ui-k
 import FishImage from '../assets/TempFishImage.jpg';
 import Tags from '../constants/Tags';
 
+// List of servings choices
 const servingsChoises = [
     {label: '1', value: 1},
     {label: '2', value: 2},
@@ -96,6 +97,7 @@ function FoodDetail({route, navigation}) {
     );
 }
 
+// Calculates the amount of an ingredient based on the current servings and the original servings
 function CalculateIngredientAmount(amount, currentServings, designedServings) {
     let realAmount = (amount / designedServings) * currentServings;
     return realAmount;
