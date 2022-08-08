@@ -30,18 +30,19 @@ export default RecipeItem = (props) => {
             onPressIn={pressStart}
             onPressOut={pressEnd}
             onPress={(event) => {
-                if (event.target == event.currentTarget) {
-                    props.navigation.navigate('Mat', {screen: 'FoodDetail', recipe: recipeData})
-                }
+                props.navigation.navigate('Mat', {screen: 'FoodDetail', recipe: recipeData})
             }}>
             
             <ImageBackground source={FishImage} style={{width: '100%', height: '100%', flexDirection: 'column-reverse'}} imageStyle={{borderRadius: 20}}>
             
+                {/* Title and cook time */}
                 <Layout style={[recipeStyle.titleDiv, {backgroundColor: theme['background-basic-color-2'],}]}>
                     <Text category='h6'>{recipeData.title}</Text>
                     <Text category='h6' style={{marginLeft: 'auto'}}>{recipeData.cookTime} min</Text>
                 </Layout>
-                <Layout style={{backgroundColor: 'transparent'}}>
+
+                {/* Layer all tags ontop of image */}
+                <Layout style={{backgroundColor: 'transparent', flexDirection: 'row', paddingLeft: 5, paddingBottom: 5}}>
                     {recipeData.tags.map((tag, index) => (
                             <Tag key={index} type={tag} active={false} nonInteractable={true} />
                         )
