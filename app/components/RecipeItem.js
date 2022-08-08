@@ -1,7 +1,9 @@
 import React, { useState, useEffect} from 'react';
-import { StyleSheet, TouchableHighlight, Image, Pressable  } from 'react-native';
+import { StyleSheet, TouchableHighlight, ImageBackground, Pressable  } from 'react-native';
 
 import Tag from '../components/Tag';
+
+import FishImage from '../assets/TempFishImage.jpg';
 
 // UI library 
 import * as eva from '@eva-design/eva';
@@ -33,18 +35,19 @@ export default RecipeItem = (props) => {
                 }
             }}>
             
-            <Image></Image>
+            <ImageBackground source={FishImage} style={{width: '100%', height: '100%', flexDirection: 'column-reverse'}} imageStyle={{borderRadius: 20}}>
             
-            <Layout style={[recipeStyle.titleDiv, {backgroundColor: theme['background-basic-color-2'],}]}>
-                <Text category='h6'>{recipeData.title}</Text>
-                <Text category='h6' style={{marginLeft: 'auto'}}>{recipeData.cookTime} min</Text>
-            </Layout>
-            <Layout style={{backgroundColor: 'transparent'}}>
-                {recipeData.tags.map((tag, index) => (
-                        <Tag key={index} type={tag} active={false} nonInteractable={true} />
-                    )
-                )}
-            </Layout>
+                <Layout style={[recipeStyle.titleDiv, {backgroundColor: theme['background-basic-color-2'],}]}>
+                    <Text category='h6'>{recipeData.title}</Text>
+                    <Text category='h6' style={{marginLeft: 'auto'}}>{recipeData.cookTime} min</Text>
+                </Layout>
+                <Layout style={{backgroundColor: 'transparent'}}>
+                    {recipeData.tags.map((tag, index) => (
+                            <Tag key={index} type={tag} active={false} nonInteractable={true} />
+                        )
+                    )}
+                </Layout>
+            </ImageBackground>
         </Pressable >
     );
 }
