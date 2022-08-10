@@ -7,7 +7,7 @@ import FishImage from '../assets/TempFishImage.jpg';
 
 // UI library 
 import * as eva from '@eva-design/eva';
-import { useTheme, ApplicationProvider, Layout, Text, Card, Button } from '@ui-kitten/components';
+import { useTheme, Layout, Text, Button } from '@ui-kitten/components';
 
 export default RecipeItem = (props) => {
     const recipeData = props.recipe.item;
@@ -29,7 +29,7 @@ export default RecipeItem = (props) => {
         <Pressable style={[recipeStyle.root, isPressed ? {backgroundColor: 'grey'} : null , {backgroundColor: theme['background-basic-color-3']}]} 
             onPressIn={pressStart}
             onPressOut={pressEnd}
-            onPress={(event) => {
+            onPress={() => {
                 props.navigation.navigate('Mat', {screen: 'FoodDetail', recipe: recipeData})
             }}>
             
@@ -42,7 +42,7 @@ export default RecipeItem = (props) => {
                 </Layout>
 
                 {/* Layer all tags ontop of image */}
-                <Layout style={{backgroundColor: 'transparent', flexDirection: 'row', paddingLeft: 5, paddingBottom: 5}}>
+                <Layout style={recipeStyle.tags}>
                     {recipeData.tags.map((tag, index) => (
                             <Tag key={index} type={tag} active={false} nonInteractable={true} />
                         )
@@ -77,5 +77,11 @@ const recipeStyle = StyleSheet.create({
         alignItems: 'center',
         paddingLeft: 15,
         paddingRight: 15,
+    },
+    tags: {
+        backgroundColor: 'transparent', 
+        flexDirection: 'row', 
+        paddingLeft: 5, 
+        paddingBottom: 5
     }
 })
