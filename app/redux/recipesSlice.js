@@ -11,12 +11,15 @@ export const recipesSlice = createSlice({
         state.recipes.push(action.payload);
     },
     removeRecipe(state, action) {
-        state.recipes.splice(action.payload, 1);
+        state.recipes = state.recipes.filter(recipe => recipe.id !== action.payload);
+    },
+    updateRecipe(state, action) {
+        const recipeIndex = state.recipes.findIndex(recipe => recipe.id === action.payload.id);
+        state.recipes[recipeIndex] = action.payload;
     }
-
   },
 })
 
 export const { addRecipe, removeRecipe } = recipesSlice.actions;
 
-export default themeSlice.reducer;
+export default recipesSlice.reducer;
