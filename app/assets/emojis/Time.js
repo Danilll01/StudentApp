@@ -1,7 +1,7 @@
 import * as React from "react"
 import Svg, { Path } from "react-native-svg"
 
-const Meat = (props) => (
+const Time = (props) => (
   <Svg
     width={22}
     height={22}
@@ -28,4 +28,4 @@ const Meat = (props) => (
   </Svg>
 )
 
-export default Meat;
+export default Time;
