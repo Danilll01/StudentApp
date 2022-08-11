@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import { Platform, SafeAreaView , ScrollView, Image } from 'react-native';
+import { Platform, SafeAreaView , ScrollView, Image, Pressable } from 'react-native';
 import DropDownPicker from 'react-native-dropdown-picker'
 
 import { useDispatch, useSelector } from 'react-redux';
@@ -10,14 +10,14 @@ import Tag from '../../components/Tag';
 
 // UI library 
 import * as eva from '@eva-design/eva';
-import { ApplicationProvider, Layout, Text, Card, Button, useTheme , Icon } from '@ui-kitten/components';
+import { ApplicationProvider, Layout, Text, Card, Button, useTheme , Icon, Input } from '@ui-kitten/components';
 
 import FishImage from '../../assets/TempFishImage.jpg';
 import EditPen from '../../assets/emojis/EditPen';
 import Tags from '../../constants/Tags';
 
 // List of servings choices
-const servingsChoises = [
+const servingsChoices = [
     {label: '1', value: 1},
     {label: '2', value: 2},
     {label: '3', value: 3},
@@ -38,6 +38,44 @@ function FoodDetail({route, navigation}) {
     
     const [pickerOpen, setPickerOpen] = useState(false);
     const [currentServings, setCurrentServings] = useState(recipe.servings);
+    const [isEditing, setIsEditing] = useState(false);
+
+    const [newTitle, setNewTitle] = useState(recipe.title);
+
+    function ToggleIsEditing() {
+        setIsEditing(!isEditing);
+    }
+
+    // Renders title based on editing state
+    function Title() {
+        if (isEditing) {
+            return (
+                <Input
+                    style={{paddingTop: 16, paddingBottom: 16}}
+                    value={newTitle}
+                    onChangeText={text => setNewTitle(text)}
+                />
+            );
+        } else {
+            return (
+                <Text category='h1' style={{paddingTop: 16, paddingBottom: 16}}>{recipe.title}</Text>
+            );
+        }
+    }
+
+    function EditButton() {
+        if (isEditing) {
+            return (
+                <Button style={{marginLeft: 'auto', marginRight: 25}} onPress={ToggleIsEditing}>Spara</Button>
+            );
+        } else {
+            return (
+                <Pressable style={{marginLeft: 'auto', marginRight: 25, padding: 5}} onPress={ToggleIsEditing}>
+                    <EditPen></EditPen>
+                </Pressable>
+            );
+        }
+    }
 
     return (
         <SafeAreaView style={{flex: 1, backgroundColor: themeStyle['background-basic-color-1']}}>
@@ -45,14 +83,14 @@ function FoodDetail({route, navigation}) {
             {/* Header */}
             <Layout style={{height: 60, flexDirection: 'row', alignItems: 'center'}}>
                 <Icon name='arrow-back' fill={themeStyle['text-basic-color']} style={{width: 42, height: 42, marginLeft: 15}} onPress={() => navigation.goBack()}/>
-                <EditPen style={{marginLeft: 'auto', marginRight: 25}}></EditPen>
+                <EditButton></EditButton>
             </Layout>
 
             <ScrollView scrollEnabled={!pickerOpen}>
                 <Image source={FishImage} style={{width: '100%', height: 200}} />
                 <Layout style={{paddingLeft: 8, paddingRight: 8}}>
-                    
-                    <Text category='h1' style={{paddingTop: 16, paddingBottom: 16}}>{recipe.title}</Text>
+
+                    <Title></Title>
                     
                     {/* Renders all tags + time to cook */}
                     <Layout style={{flexDirection: 'row'}}>
@@ -68,7 +106,7 @@ function FoodDetail({route, navigation}) {
                         <Text category='h5' >Ingredienser för </Text>
                         <DropDownPicker style={{width: 60}}
                             containerStyle={{width: 60}} 
-                            items={servingsChoises} 
+                            items={servingsChoices} 
                             value={currentServings}
                             open={pickerOpen}
                             setOpen={setPickerOpen}
