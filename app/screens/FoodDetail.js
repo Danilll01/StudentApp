@@ -10,9 +10,10 @@ import Tag from '../components/Tag';
 
 // UI library 
 import * as eva from '@eva-design/eva';
-import { ApplicationProvider, Layout, Text, Card, Button, useTheme } from '@ui-kitten/components';
+import { ApplicationProvider, Layout, Text, Card, Button, useTheme , Icon } from '@ui-kitten/components';
 
 import FishImage from '../assets/TempFishImage.jpg';
+import EditPen from '../assets/emojis/EditPen';
 import Tags from '../constants/Tags';
 
 // List of servings choices
@@ -40,6 +41,13 @@ function FoodDetail({route, navigation}) {
 
     return (
         <SafeAreaView style={{flex: 1, backgroundColor: themeStyle['background-basic-color-1']}}>
+
+            {/* Header */}
+            <Layout style={{height: 60, flexDirection: 'row', alignItems: 'center'}}>
+                <Icon name='arrow-back' fill={themeStyle['text-basic-color']} style={{width: 42, height: 42, marginLeft: 15}} onPress={() => navigation.goBack()}/>
+                <EditPen style={{marginLeft: 'auto', marginRight: 25}}></EditPen>
+            </Layout>
+
             <ScrollView scrollEnabled={!pickerOpen}>
                 <Image source={FishImage} style={{width: '100%', height: 200}} />
                 <Layout style={{paddingLeft: 8, paddingRight: 8}}>
@@ -55,7 +63,7 @@ function FoodDetail({route, navigation}) {
                         })}
                     </Layout>
                     
-                    
+                    {/* Renders the servings picker */}
                     <Layout style={{flex: 1, flexDirection: 'row', zIndex: 100, alignItems: 'center'}}>
                         <Text category='h5' >Ingredienser för </Text>
                         <DropDownPicker style={{width: 60}}
@@ -71,7 +79,7 @@ function FoodDetail({route, navigation}) {
                         <Text category='h5'> personer</Text>
                     </Layout>
 
-                    
+                    {/* Renders all ingredients */}
                     <Layout style={{flex: 1, flexDirection: 'row'}}>
                         <Layout style={{paddingLeft: 20}}>
                             {recipe.ingredients.map((ingredient, index) => (
@@ -86,9 +94,9 @@ function FoodDetail({route, navigation}) {
                                 <Text key={index} category='h6'>  -  {ingredient.name}</Text>
                             ))}
                         </Layout>
-                        
                     </Layout>
 
+                    {/* Renders the instructions */}
                     <Text category='h5'>Recept</Text>
                     <Layout style={{paddingLeft: 20}}>
                         {recipe.instructions.map((step, index) => (
