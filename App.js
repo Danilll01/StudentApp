@@ -22,7 +22,7 @@ import { default as lightTheme } from './app/themes/light.json';
 
 import HomeScreen from './app/screens/HomeScreen';
 import TransportScreen from './app/screens/TransportScreen';
-import FoodScreen from './app/screens/FoodScreen';
+import FoodScreen from './app/screens/Food/Food';
 import ScheduleScreen from './app/screens/ScheduleScreen';
 
 const { Navigator, Screen } = createBottomTabNavigator();

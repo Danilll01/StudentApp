@@ -3,18 +3,18 @@ import { Platform, SafeAreaView , ScrollView, Image } from 'react-native';
 import DropDownPicker from 'react-native-dropdown-picker'
 
 import { useDispatch, useSelector } from 'react-redux';
-import { getCurrentTheme } from '../redux/themeSlice';
+import { getCurrentTheme } from '../../redux/themeSlice';
 
 
-import Tag from '../components/Tag';
+import Tag from '../../components/Tag';
 
 // UI library 
 import * as eva from '@eva-design/eva';
 import { ApplicationProvider, Layout, Text, Card, Button, useTheme , Icon } from '@ui-kitten/components';
 
-import FishImage from '../assets/TempFishImage.jpg';
-import EditPen from '../assets/emojis/EditPen';
-import Tags from '../constants/Tags';
+import FishImage from '../../assets/TempFishImage.jpg';
+import EditPen from '../../assets/emojis/EditPen';
+import Tags from '../../constants/Tags';
 
 // List of servings choices
 const servingsChoises = [

@@ -1,13 +1,13 @@
 import React, {useState} from 'react';
 import { Platform, SafeAreaView , ScrollView, FlatList } from 'react-native';
 import { SearchBar } from 'react-native-elements';
-import styles from './ScreenStyle.js';
+import styles from '../ScreenStyle.js';
 import { createStackNavigator } from '@react-navigation/stack';
 
-import Tag from '../components/Tag';
-import RecipeItem from '../components/RecipeItem';
-import FoodDetail from './FoodDetail';
-import Tags from '../constants/Tags';
+import Tag from '../../components/Tag';
+import RecipeItem from '../../components/RecipeItem';
+import FoodDetail from './Detail';
+import Tags from '../../constants/Tags';
 
 // UI library 
 import * as eva from '@eva-design/eva';
@@ -95,7 +95,7 @@ const recipeData = [
     }
 ]
 
-function FoodScreen(props) {
+function Food(props) {
     
     return (
         <Stack.Navigator>
@@ -157,4 +157,4 @@ function MainScreen({navigation}) {
 
 
 
-export default FoodScreen;
+export default Food;
