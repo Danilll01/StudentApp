@@ -14,8 +14,9 @@ import { PersistGate } from "redux-persist/integration/react"
 import { toggleTheme, getCurrentTheme } from './app/redux/themeSlice';
 
 // UI library
-import { ApplicationProvider, Layout, Text, Card, BottomNavigation, BottomNavigationTab, Icon } from '@ui-kitten/components';
+import { ApplicationProvider, IconRegistry , Layout, Text, Card, BottomNavigation, BottomNavigationTab, Icon } from '@ui-kitten/components';
 import * as eva from '@eva-design/eva';
+import { EvaIconsPack } from '@ui-kitten/eva-icons';
 import { default as darkTheme } from './app/themes/dark.json';
 import { default as lightTheme } from './app/themes/light.json';
 
@@ -38,6 +39,7 @@ export default function AppWrapper() {
     return (
         <Provider store={Store}>
             <PersistGate loading={null} persistor={persistor}>
+                <IconRegistry icons={EvaIconsPack} />
                 <App />
             </PersistGate>
         </Provider>
