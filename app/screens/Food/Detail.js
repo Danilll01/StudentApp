@@ -10,7 +10,7 @@ import Tag from '../../components/Tag';
 
 // UI library 
 import * as eva from '@eva-design/eva';
-import { ApplicationProvider, Layout, Text, Card, Button, useTheme , Icon, Input } from '@ui-kitten/components';
+import { ApplicationProvider, Layout, Text, Card, Button, useTheme , Icon, Input, Select, SelectItem } from '@ui-kitten/components';
 
 import FishImage from '../../assets/TempFishImage.jpg';
 import EditPen from '../../assets/emojis/EditPen';
@@ -117,7 +117,15 @@ function FoodDetail({route, navigation}) {
                                             setCurrentTextEdit(defaultTextEdit)
                                         }}
                                     ></Input>
-                                    <Text category='h6' style={{flex: 1}}>{ingredient.unit}</Text>
+
+                                    <Select style={{flex: 1}} value={ingredient.unit} accessoryRight={null}>
+                                        <SelectItem title='g'/>
+                                        <SelectItem title='kg'/>
+                                        <SelectItem title='dl'/>
+                                        <SelectItem title='l'/>
+                                        <SelectItem title='st'/>
+                                    </Select>
+
                                     <Text category='h6' style={{flex: 2}}>{ingredient.name}</Text>
                                 </Layout>
                             </Layout>
