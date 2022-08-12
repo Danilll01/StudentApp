@@ -79,11 +79,12 @@ function FoodDetail({route, navigation}) {
     }
 
     function Ingredients() {
-        if (isEditing) {
-            let defaultTextEdit = {editingIndex:-1, text:''}
-            // Used to keep track of which ingredient is being edited and only update newIngredients when the user is done editing
-            let [currTextEdit, setCurrentTextEdit] = useState(defaultTextEdit);
+        let defaultTextEdit = {editingIndex:-1, text:''}
+        // Used to keep track of which ingredient is being edited and only update newIngredients when the user is done editing
+        let [currEditAmount, setCurrentEditAmount] = useState(defaultTextEdit);
+        let [currEditName, setCurrentEditName] = useState(defaultTextEdit);
 
+        if (isEditing) {
             return (
                 <Layout style={{padding: 10, paddingTop: 0}}>
                     <Layout style={{flexDirection: 'row', paddingTop: 10, paddingBottom: 10}}>
@@ -99,25 +100,21 @@ function FoodDetail({route, navigation}) {
                         return (
                             <Layout key={index} style={{flexDirection: 'row', paddingTop: 10, paddingBottom: 10}}>
                                 <Layout style={{flex: 1, flexDirection: 'row'}}>
+                                    {/* Inputfield for ingredient amount */}
                                     <Input style={{flex: 1}} 
-                                        value={currTextEdit.editingIndex === index ? currTextEdit.text : String(ingredient.amount)} 
-                                        onChangeText={text => setCurrentTextEdit({text,editingIndex:index})}
+                                        value={currEditAmount.editingIndex === index ? currEditAmount.text : String(ingredient.amount)} 
+                                        onChangeText={text => setCurrentEditAmount({text,editingIndex:index})}
                                         // The input field is in focus
-                                        onFocus={() => setCurrentTextEdit({editingIndex: index, text: String(ingredient.amount)})}
+                                        onFocus={() => setCurrentEditAmount({editingIndex: index, text: String(ingredient.amount)})}
                                         // The input lost focus
                                         onBlur={() => {
                                             // Update newIngredients with the new value
-                                            setNewIngredients(newIngredients.map((ingredient, i) => {
-                                                if (i === index) {
-                                                    ingredient.amount = Number(currTextEdit.text);
-                                                }
-                                                return ingredient;
-                                            }));
-                                            setCurrentTextEdit(defaultTextEdit)
+                                            updateIngredientValue(index, 'amount', Number(currEditAmount.text), setCurrentEditAmount);
                                         }}
                                     ></Input>
 
-                                    <Select style={{flex: 1, paddingLeft: 8, paddingRight: 8}} value={ingredient.unit} accessoryRight={null}>
+                                    {/* The unit selection is rendered as a dropdown */}
+                                    <Select style={{flex: 1, paddingLeft: 6, paddingRight: 6}} value={ingredient.unit} accessoryRight={null}>
                                         <SelectItem title='g'/>
                                         <SelectItem title='kg'/>
                                         <SelectItem title='dl'/>
@@ -125,7 +122,18 @@ function FoodDetail({route, navigation}) {
                                         <SelectItem title='st'/>
                                     </Select>
 
-                                    <Text category='h6' style={{flex: 2}}>{ingredient.name}</Text>
+                                    {/* Inputfield for ingredient name */}
+                                    <Input style={{flex: 2}}
+                                        value={currEditName.editingIndex === index ? currEditName.text : ingredient.name}
+                                        onChangeText={text => setCurrentEditName({text,editingIndex:index})}
+                                        // The input field is in focus
+                                        onFocus={() => setCurrentEditName({editingIndex: index, text: ingredient.name})}
+                                        // The input lost focus
+                                        onBlur={() => {
+                                            // Update newIngredients with the new value
+                                            updateIngredientValue(index, 'name', currEditName.text, setCurrentEditName);
+                                        }}
+                                    ></Input>
                                 </Layout>
                             </Layout>
                         );
@@ -150,6 +158,17 @@ function FoodDetail({route, navigation}) {
                     </Layout>
                 </Layout>
             )
+        }
+
+        // Updates the ingredient amount in newIngredients
+        function updateIngredientValue(index, key, value, setCurrentEditName) {
+            setNewIngredients(newIngredients.map((ingredient, i) => {
+                if (i === index) {
+                    ingredient[key] = value;
+                }
+                return ingredient;
+            }));
+            setCurrentEditName(defaultTextEdit);
         }
     }
 
