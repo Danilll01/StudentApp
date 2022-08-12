@@ -41,6 +41,10 @@ function FoodDetail({route, navigation}) {
     const [isEditing, setIsEditing] = useState(false);
 
     const [newTitle, setNewTitle] = useState(recipe.title);
+    const [newIngredients, setNewIngredients] = useState(recipe.ingredients);
+
+    console.log("hello")
+    console.log(newIngredients)
 
     function ToggleIsEditing() {
         setIsEditing(!isEditing);
@@ -74,6 +78,62 @@ function FoodDetail({route, navigation}) {
                     <EditPen></EditPen>
                 </Pressable>
             );
+        }
+    }
+
+    function Ingredients() {
+        if (isEditing) {
+            return (
+                <Layout style={{padding: 20, paddingTop: 0}}>
+                    <Text category='h3'>Ingredienser</Text>
+                    <Layout style={{flexDirection: 'row', paddingTop: 10, paddingBottom: 10}}>
+                        <Layout style={{flex: 1, flexDirection: 'row'}}>
+                            <Text category='h6' style={{flex: 1}}>Mängd</Text>
+                            <Text category='h6' style={{flex: 1}}>Enhet</Text>
+                            <Text category='h6' style={{flex: 2}}>Ingrediens</Text>
+                        </Layout>
+                    </Layout>
+                    
+                    {/*Loops through all ingredients and renders them*/}
+                    {newIngredients.map((ingredient, index) => {
+                        return (
+                            <Layout key={index} style={{flexDirection: 'row', paddingTop: 10, paddingBottom: 10}}>
+                                <Layout style={{flex: 1, flexDirection: 'row'}}>
+                                    <Input style={{flex: 1}} value={String(ingredient.amount)} onChangeText={text => {
+                                        // Loop through ingredients and update the amount
+                                        setNewIngredients(newIngredients.map((ingredient, i) => {
+                                            if (i === index) {
+                                                ingredient.amount = Number(text);
+                                            }
+                                            return ingredient;
+                                        }));
+                                    }}></Input>
+                                    <Text category='h6' style={{flex: 1}}>{ingredient.unit}</Text>
+                                    <Text category='h6' style={{flex: 2}}>{ingredient.name}</Text>
+                                </Layout>
+                            </Layout>
+                        );
+                    })}
+                </Layout>
+            );
+        } else {
+            return (
+                <Layout style={{flex: 1, flexDirection: 'row'}}>
+                    <Layout style={{paddingLeft: 20}}>
+                        {recipe.ingredients.map((ingredient, index) => (
+                            <Text key={index} category='h6'>
+                                {ingredient.amount && CalculateIngredientAmount(ingredient.amount, currentServings, recipe.servings)} {ingredient.unit}
+                            </Text>
+                        ))}
+                    </Layout>
+
+                    <Layout>
+                        {recipe.ingredients.map((ingredient, index) => (
+                            <Text key={index} category='h6'>  -  {ingredient.name}</Text>
+                        ))}
+                    </Layout>
+                </Layout>
+            )
         }
     }
 
@@ -118,21 +178,7 @@ function FoodDetail({route, navigation}) {
                     </Layout>
 
                     {/* Renders all ingredients */}
-                    <Layout style={{flex: 1, flexDirection: 'row'}}>
-                        <Layout style={{paddingLeft: 20}}>
-                            {recipe.ingredients.map((ingredient, index) => (
-                                <Text key={index} category='h6'>
-                                    {ingredient.amount && CalculateIngredientAmount(ingredient.amount, currentServings, recipe.servings)} {ingredient.unit}
-                                </Text>
-                            ))}
-                        </Layout>
-
-                        <Layout>
-                            {recipe.ingredients.map((ingredient, index) => (
-                                <Text key={index} category='h6'>  -  {ingredient.name}</Text>
-                            ))}
-                        </Layout>
-                    </Layout>
+                    <Ingredients></Ingredients>
 
                     {/* Renders the instructions */}
                     <Text category='h5'>Recept</Text>
