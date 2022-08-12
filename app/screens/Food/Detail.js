@@ -85,8 +85,7 @@ function FoodDetail({route, navigation}) {
             let [currTextEdit, setCurrentTextEdit] = useState(defaultTextEdit);
 
             return (
-                <Layout style={{padding: 20, paddingTop: 0}}>
-                    <Text category='h3'>Ingredienser</Text>
+                <Layout style={{padding: 10, paddingTop: 0}}>
                     <Layout style={{flexDirection: 'row', paddingTop: 10, paddingBottom: 10}}>
                         <Layout style={{flex: 1, flexDirection: 'row'}}>
                             <Text category='h6' style={{flex: 1}}>Mängd</Text>
@@ -118,7 +117,7 @@ function FoodDetail({route, navigation}) {
                                         }}
                                     ></Input>
 
-                                    <Select style={{flex: 1}} value={ingredient.unit} accessoryRight={null}>
+                                    <Select style={{flex: 1, paddingLeft: 8, paddingRight: 8}} value={ingredient.unit} accessoryRight={null}>
                                         <SelectItem title='g'/>
                                         <SelectItem title='kg'/>
                                         <SelectItem title='dl'/>

@@ -1,0 +1,14 @@
+{
+    "components": {
+      "Select": {
+        "meta": {},
+        "appearances": {
+          "default": {
+            "mapping": {
+                "paddingHorizontal": 0
+            }
+          }
+        }
+      }
+    }
+  }
