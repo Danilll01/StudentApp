@@ -43,9 +43,6 @@ function FoodDetail({route, navigation}) {
     const [newTitle, setNewTitle] = useState(recipe.title);
     const [newIngredients, setNewIngredients] = useState(recipe.ingredients);
 
-    console.log("hello")
-    console.log(newIngredients)
-
     function ToggleIsEditing() {
         setIsEditing(!isEditing);
     }
@@ -83,6 +80,10 @@ function FoodDetail({route, navigation}) {
 
     function Ingredients() {
         if (isEditing) {
+            let defaultTextEdit = {editingIndex:-1, text:''}
+            // Used to keep track of which ingredient is being edited and only update newIngredients when the user is done editing
+            let [currTextEdit, setCurrentTextEdit] = useState(defaultTextEdit);
+
             return (
                 <Layout style={{padding: 20, paddingTop: 0}}>
                     <Text category='h3'>Ingredienser</Text>
@@ -93,21 +94,29 @@ function FoodDetail({route, navigation}) {
                             <Text category='h6' style={{flex: 2}}>Ingrediens</Text>
                         </Layout>
                     </Layout>
-                    
+
                     {/*Loops through all ingredients and renders them*/}
                     {newIngredients.map((ingredient, index) => {
                         return (
                             <Layout key={index} style={{flexDirection: 'row', paddingTop: 10, paddingBottom: 10}}>
                                 <Layout style={{flex: 1, flexDirection: 'row'}}>
-                                    <Input style={{flex: 1}} value={String(ingredient.amount)} onChangeText={text => {
-                                        // Loop through ingredients and update the amount
-                                        setNewIngredients(newIngredients.map((ingredient, i) => {
-                                            if (i === index) {
-                                                ingredient.amount = Number(text);
-                                            }
-                                            return ingredient;
-                                        }));
-                                    }}></Input>
+                                    <Input style={{flex: 1}} 
+                                        value={currTextEdit.editingIndex === index ? currTextEdit.text : String(ingredient.amount)} 
+                                        onChangeText={text => setCurrentTextEdit({text,editingIndex:index})}
+                                        // The input field is in focus
+                                        onFocus={() => setCurrentTextEdit({editingIndex: index, text: String(ingredient.amount)})}
+                                        // The input lost focus
+                                        onBlur={() => {
+                                            // Update newIngredients with the new value
+                                            setNewIngredients(newIngredients.map((ingredient, i) => {
+                                                if (i === index) {
+                                                    ingredient.amount = Number(currTextEdit.text);
+                                                }
+                                                return ingredient;
+                                            }));
+                                            setCurrentTextEdit(defaultTextEdit)
+                                        }}
+                                    ></Input>
                                     <Text category='h6' style={{flex: 1}}>{ingredient.unit}</Text>
                                     <Text category='h6' style={{flex: 2}}>{ingredient.name}</Text>
                                 </Layout>
