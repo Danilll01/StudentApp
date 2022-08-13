@@ -10,7 +10,7 @@ import Tag from '../../components/Tag';
 
 // UI library 
 import * as eva from '@eva-design/eva';
-import { ApplicationProvider, Layout, Text, Card, Button, useTheme , Icon, Input, Select, SelectItem } from '@ui-kitten/components';
+import { ApplicationProvider, Layout, Text, Card, Button, useTheme , Icon, Input, Select, SelectItem, Divider } from '@ui-kitten/components';
 
 import FishImage from '../../assets/TempFishImage.jpg';
 import EditPen from '../../assets/emojis/EditPen';
@@ -38,9 +38,6 @@ const units = [
     'ml',
     'st'
 ];
-
-
-
 
 function FoodDetail({route, navigation}) {
     let recipe = route.params.route.params.recipe;
@@ -100,21 +97,26 @@ function FoodDetail({route, navigation}) {
         if (isEditing) {
             return (
                 <Layout style={{padding: 10, paddingTop: 0}}>
-                    <Layout style={{flexDirection: 'row', paddingTop: 10, paddingBottom: 10}}>
-                        <Layout style={{flex: 1, flexDirection: 'row'}}>
-                            <Text category='h6' style={{flex: 1}}>Mängd</Text>
-                            <Text category='h6' style={{flex: 1}}>Enhet</Text>
-                            <Text category='h6' style={{flex: 2}}>Ingrediens</Text>
-                        </Layout>
-                    </Layout>
-
                     {/*Loops through all ingredients and renders them*/}
                     {newIngredients.map((ingredient, index) => {
                         return (
-                            <Layout key={index} style={{flexDirection: 'row', paddingTop: 10, paddingBottom: 10}}>
-                                <Layout style={{flex: 1, flexDirection: 'row'}}>
+                            <Layout key={index} style={{flexDirection: 'column', paddingBottom: 5}}>
+                                {/* Inputfield for ingredient name */}
+                                <Input style={{flex: 1}} label='Ingredient'
+                                    value={currEditName.editingIndex === index ? currEditName.text : ingredient.name}
+                                    onChangeText={text => setCurrentEditName({text,editingIndex:index})}
+                                    // The input field is in focus
+                                    onFocus={() => setCurrentEditName({editingIndex: index, text: ingredient.name})}
+                                    // The input lost focus
+                                    onBlur={() => {
+                                        // Update newIngredients with the new value
+                                        updateIngredientsArray(index, 'name', currEditName.text);
+                                        setCurrentEditName(defaultTextEdit)
+                                    }}
+                                ></Input>
+                                <Layout style={{flexDirection: 'row', justifyContent: 'center'}}>
                                     {/* Inputfield for ingredient amount */}
-                                    <Input style={{flex: 1}} 
+                                    <Input style={{flex: 1}} label='Mängd'
                                         value={currEditAmount.editingIndex === index ? currEditAmount.text : (ingredient.amount ? String(ingredient.amount) : '')} 
                                         onChangeText={text => setCurrentEditAmount({text, editingIndex:index})}
                                         // The input field is in focus
@@ -128,7 +130,7 @@ function FoodDetail({route, navigation}) {
                                     ></Input>
 
                                     {/* The unit selection is rendered as a dropdown */}
-                                    <Select style={{flex: 1, paddingLeft: 6, paddingRight: 6}} 
+                                    <Select style={{flex: 1, paddingLeft: 6, paddingRight: 6}} label='Enhet'
                                         value={currEditUnit.editingIndex === index ? units[currEditUnit.selectedIndex] : ingredient.unit}
                                         onSelect={(unit) => {
                                             updateIngredientsArray(index, 'unit', units[unit.row]);
@@ -141,24 +143,21 @@ function FoodDetail({route, navigation}) {
                                             );
                                         })}
                                     </Select>
-
-                                    {/* Inputfield for ingredient name */}
-                                    <Input style={{flex: 2}}
-                                        value={currEditName.editingIndex === index ? currEditName.text : ingredient.name}
-                                        onChangeText={text => setCurrentEditName({text,editingIndex:index})}
-                                        // The input field is in focus
-                                        onFocus={() => setCurrentEditName({editingIndex: index, text: ingredient.name})}
-                                        // The input lost focus
-                                        onBlur={() => {
-                                            // Update newIngredients with the new value
-                                            updateIngredientsArray(index, 'name', currEditName.text);
-                                            setCurrentEditName(defaultTextEdit)
-                                        }}
-                                    ></Input>
+                                    <Button 
+                                        style={{flex: 1, margin: 15}} 
+                                        status='danger' 
+                                        size='small' 
+                                        accessoryLeft={<Icon name='trash-2-outline' style={{width: 42, height: 42, marginLeft: 15}}/>}
+                                        >Ta bort</Button>
                                 </Layout>
+                                <Divider style={{backgroundColor: themeStyle['color-basic-600'], height: 3}}></Divider>
                             </Layout>
                         );
                     })}
+                    <Layout style={{flex: 1, flexDirection: 'row'}}>
+                        <Button style={{margin: 5}}>Lägg till</Button>
+                    </Layout>
+                    
                 </Layout>
             );
         } else {
