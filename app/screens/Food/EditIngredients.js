@@ -39,7 +39,7 @@ function EditIngredients({ newIngredientsState }) {
             {newIngredients.map((ingredient, index) => {
                 let formattedIngredientAmount = ingredient.amount ? String(ingredient.amount) : ''
                 return (
-                    <Layout key={index} style={{flexDirection: 'column', paddingBottom: 5}}>
+                    <Layout key={index} style={{flexDirection: 'column', paddingBottom: 11}}>
                         {/* Inputfield for ingredient name */}
                         <Input style={{flex: 1}} label='Ingredient'
                             value={currEditName.editingIndex === index ? currEditName.text : ingredient.name}
@@ -95,12 +95,12 @@ function EditIngredients({ newIngredientsState }) {
                                 onPress={() => removeIngredient(index)}
                                 >Ta bort</Button>
                         </Layout>
-                        <Divider style={{backgroundColor: themeStyle['color-basic-600'], height: 3}}></Divider>
+                        <Divider style={{backgroundColor: themeStyle['color-basic-600'], height: 3, marginTop: 5}}></Divider>
                     </Layout>
                 );
             })}
             
-            <Button state='success' onPress={() => addIngredient()}>Lägg till ingrediens</Button>
+            <Button onPress={() => addIngredient()}>Lägg till ingrediens</Button>
         </Layout>
     );
 

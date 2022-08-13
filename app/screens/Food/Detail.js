@@ -69,7 +69,23 @@ function FoodDetail({route, navigation}) {
     function EditButton() {
         if (isEditing) {
             return (
-                <Button style={{marginLeft: 'auto', marginRight: 25}} onPress={ToggleIsEditing}>Spara</Button>
+                <>
+                    <Button
+                        style={{marginLeft: 'auto', marginRight: 5}} 
+                        status='danger'
+                        accessoryLeft={<Icon name='trash-2-outline' style={{width: 42, height: 42, marginLeft: 15}}/>}
+                    ></Button>
+                    <Button 
+                        style={{marginRight: 5}} 
+                        status='danger' 
+                    >Avbryt</Button>
+                    <Button 
+                        style={{marginRight: 25}} 
+                        status='success' 
+                        onPress={ToggleIsEditing}
+                    >Spara</Button>
+                </>
+                
             );
         } else {
             return (
