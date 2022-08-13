@@ -32,6 +32,7 @@ function EditIngredients({ newIngredientsState }) {
         <Layout style={{padding: 10, paddingTop: 0}}>
             {/*Loops through all ingredients and renders them*/}
             {newIngredients.map((ingredient, index) => {
+                let formattedIngredientAmount = ingredient.amount ? String(ingredient.amount) : ''
                 return (
                     <Layout key={index} style={{flexDirection: 'column', paddingBottom: 5}}>
                         {/* Inputfield for ingredient name */}
@@ -50,10 +51,15 @@ function EditIngredients({ newIngredientsState }) {
                         <Layout style={{flexDirection: 'row', justifyContent: 'center'}}>
                             {/* Inputfield for ingredient amount */}
                             <Input style={{flex: 1}} label='Mängd'
-                                value={currEditAmount.editingIndex === index ? currEditAmount.text : (ingredient.amount ? String(ingredient.amount) : '')} 
-                                onChangeText={text => setCurrentEditAmount({text, editingIndex:index})}
+                                value={currEditAmount.editingIndex === index ? currEditAmount.text : formattedIngredientAmount} 
+                                onChangeText={text => {
+                                    // Check if the input is a number
+                                    if (/^\d+$/.test(text[text.length-1])){
+                                        setCurrentEditAmount({text, editingIndex: index});
+                                    }
+                                }}
                                 // The input field is in focus
-                                onFocus={() => setCurrentEditAmount({editingIndex: index, text: (ingredient.amount ? String(ingredient.amount) : '')})}
+                                onFocus={() => setCurrentEditAmount({editingIndex: index, text: formattedIngredientAmount})}
                                 // The input lost focus
                                 onBlur={() => {
                                     // Update newIngredients with the new value
@@ -87,10 +93,8 @@ function EditIngredients({ newIngredientsState }) {
                     </Layout>
                 );
             })}
-            <Layout style={{flex: 1, flexDirection: 'row'}}>
-                <Button style={{margin: 5}}>Lägg till</Button>
-            </Layout>
             
+            <Button>Lägg till ingrediens</Button>
         </Layout>
     );
 
