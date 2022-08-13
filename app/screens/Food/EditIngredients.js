@@ -12,10 +12,10 @@ import { Layout, Text, Card, Button, useTheme , Icon, Input, Select, SelectItem,
 
 import PropTypes from 'prop-types';
 
+
 EditIngredients.propTypes = {
     newIngredientsState: PropTypes.array.isRequired,
 }
-
 
 function EditIngredients({ newIngredientsState }) {
     const themeStyle = useTheme();
@@ -87,6 +87,7 @@ function EditIngredients({ newIngredientsState }) {
                                 status='danger' 
                                 size='small' 
                                 accessoryLeft={<Icon name='trash-2-outline' style={{width: 42, height: 42, marginLeft: 15}}/>}
+                                onPress={() => removeIngredient(index)}
                                 >Ta bort</Button>
                         </Layout>
                         <Divider style={{backgroundColor: themeStyle['color-basic-600'], height: 3}}></Divider>
@@ -94,9 +95,16 @@ function EditIngredients({ newIngredientsState }) {
                 );
             })}
             
-            <Button>Lägg till ingrediens</Button>
+            <Button state='success'>Lägg till ingrediens</Button>
         </Layout>
     );
+
+    function removeIngredient(index) {
+        setNewIngredients([
+            ...newIngredients.slice(0, index),
+            ...newIngredients.slice(index + 1)
+        ])
+    }
 
     
     // Updates the ingredient amount in newIngredients
