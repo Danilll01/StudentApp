@@ -8,6 +8,7 @@ import Tag from '../../components/Tag';
 import RecipeItem from '../../components/RecipeItem';
 import FoodDetail from './Detail';
 import Tags from '../../constants/Tags';
+import Units from '../../constants/Units.js';
 
 // UI library 
 import * as eva from '@eva-design/eva';
@@ -27,27 +28,27 @@ const recipeData = [
         ingredients: [
             {
                 amount: 400,
-                unit: "g",
+                unit: Units.G,
                 name: "Laxfile"
             },
             {
                 amount: 1/2,
-                unit: "st",
+                unit: Units.ST,
                 name: "Citron"
             },
             {
                 amount: 2,
-                unit: "dl",
+                unit: Units.DL,
                 name: "Creme fraiche"
             },
             {
                 amount: 300,
-                unit: "g",
+                unit: Units.G,
                 name: "Potatis"
             },
             {
                 amount: 1,
-                unit: "st",
+                unit: Units.ST,
                 name: "Dillvippa"
             },
             {

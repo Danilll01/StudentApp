@@ -4,6 +4,8 @@ import { Platform, SafeAreaView , ScrollView, Image, Pressable } from 'react-nat
 import { useDispatch, useSelector } from 'react-redux';
 import { getCurrentTheme } from '../../redux/themeSlice';
 
+import Units from '../../constants/Units';
+
 // UI library 
 import * as eva from '@eva-design/eva';
 import { Layout, Text, Card, Button, useTheme , Icon, Input, Select, SelectItem, Divider } from '@ui-kitten/components';
@@ -14,15 +16,6 @@ EditIngredients.propTypes = {
     newIngredientsState: PropTypes.array.isRequired,
 }
 
-
-const units = [
-    'g',
-    'kg',
-    'l',
-    'dl',
-    'ml',
-    'st'
-];
 
 function EditIngredients({ newIngredientsState }) {
     const themeStyle = useTheme();
@@ -71,15 +64,15 @@ function EditIngredients({ newIngredientsState }) {
 
                             {/* The unit selection is rendered as a dropdown */}
                             <Select style={{flex: 1, paddingLeft: 6, paddingRight: 6}} label='Enhet'
-                                value={currEditUnit.editingIndex === index ? units[currEditUnit.selectedIndex] : ingredient.unit}
+                                value={currEditUnit.editingIndex === index ? Object.values(Units)[currEditUnit.selectedIndex] : ingredient.unit}
                                 onSelect={(unit) => {
-                                    updateIngredientsArray(index, 'unit', units[unit.row]);
+                                    updateIngredientsArray(index, 'unit', Object.values(Units)[unit.row]);
                                     setCurrentEditUnit({editingIndex: -1, selectedIndex: -1});
                                 }}>
 
-                                {units.map((unit, index) => {
+                                {Object.keys(Units).map((unit, index) => {
                                     return (
-                                        <SelectItem key={index} title={unit} />
+                                        <SelectItem key={index} title={unit.toLowerCase()} />
                                     );
                                 })}
                             </Select>
