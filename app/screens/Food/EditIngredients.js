@@ -12,6 +12,11 @@ import { Layout, Text, Card, Button, useTheme , Icon, Input, Select, SelectItem,
 
 import PropTypes from 'prop-types';
 
+const defaultIngredient = {
+    name: '',
+    amount: 0,
+    unit: '',
+}
 
 EditIngredients.propTypes = {
     newIngredientsState: PropTypes.array.isRequired,
@@ -95,9 +100,13 @@ function EditIngredients({ newIngredientsState }) {
                 );
             })}
             
-            <Button state='success'>Lägg till ingrediens</Button>
+            <Button state='success' onPress={() => addIngredient()}>Lägg till ingrediens</Button>
         </Layout>
     );
+
+    function addIngredient(){
+        setNewIngredients([...newIngredients, defaultIngredient]);
+    }
 
     function removeIngredient(index) {
         setNewIngredients([
