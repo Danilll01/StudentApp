@@ -107,7 +107,7 @@ function FoodDetail({route, navigation}) {
                             let updatedRecipe = {
                                 ...recipe,
                                 title: newTitle,
-                                ingredients: newIngredients,
+                                ingredients: newIngredients.filter(ingredient => ingredient.name !== ''), // Remove empty ingredients
                                 servings: currentServings
                             }
                             dispatch(updateRecipe(updatedRecipe));
