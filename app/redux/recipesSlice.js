@@ -95,7 +95,15 @@ export const recipesSlice = createSlice({
     },
     updateRecipe(state, action) {
         const recipeIndex = state.recipes.findIndex(recipe => recipe.id === action.payload.id);
-        state.recipes[recipeIndex] = action.payload;
+        let newState = {
+            ...state,
+            recipes: [
+                ...state.recipes.slice(0, recipeIndex),
+                action.payload,
+                ...state.recipes.slice(recipeIndex + 1)
+            ]
+        }
+        return newState;
     }
   },
 })
