@@ -210,7 +210,8 @@ function FoodDetail({route, navigation}) {
 // Calculates the amount of an ingredient based on the current servings and the original servings
 function CalculateIngredientAmount(amount, currentServings, designedServings) {
     let realAmount = (amount / designedServings) * currentServings;
-    return realAmount;
+    let roundedAmount = Math.round(realAmount * 10) / 10;
+    return roundedAmount;
 }
 
 export default FoodDetail;
