@@ -5,6 +5,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { composeWithDevTools } from 'redux-devtools-extension';
 
 import themeReducer from './themeSlice';
+import recipesReducer from './recipesSlice';
 
 const persistConfig = {
 	key: "root",
@@ -14,6 +15,7 @@ const persistConfig = {
 }
 const rootReducer = combineReducers({
 	theme: themeReducer,
+    recipes: recipesReducer,
 })
 const persistedReducer = persistReducer(persistConfig, rootReducer)
 
