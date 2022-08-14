@@ -30,7 +30,7 @@ export default RecipeItem = (props) => {
             onPressIn={pressStart}
             onPressOut={pressEnd}
             onPress={() => {
-                props.navigation.navigate('Mat', {screen: 'FoodDetail', recipe: recipeData})
+                props.navigation.navigate('Mat', {screen: 'FoodDetail', recipeId: recipeData.id})
             }}>
             
             <ImageBackground source={FishImage} style={{width: '100%', height: '100%', flexDirection: 'column-reverse'}} imageStyle={{borderRadius: 20}}>

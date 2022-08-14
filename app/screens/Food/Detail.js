@@ -34,7 +34,7 @@ const servingsChoices = [
 
 
 function FoodDetail({route, navigation}) {
-    let recipeId = route.params.route.params.recipe.id;
+    let recipeId = route.params.route.params.recipeId;
     const recipe = useSelector(getRecipes).find(recipe => recipe.id === recipeId);
     const themeStyle = useTheme();
     const theme = useSelector(getCurrentTheme);
