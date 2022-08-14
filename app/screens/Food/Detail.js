@@ -4,6 +4,7 @@ import DropDownPicker from 'react-native-dropdown-picker'
 
 import { useDispatch, useSelector } from 'react-redux';
 import { getCurrentTheme } from '../../redux/themeSlice';
+import { addRecipe, getRecipes, removeRecipe, updateRecipe } from '../../redux/recipesSlice';
 
 
 import Tag from '../../components/Tag';
@@ -33,9 +34,13 @@ const servingsChoices = [
 
 
 function FoodDetail({route, navigation}) {
-    let recipe = route.params.route.params.recipe;
+    let recipeId = route.params.route.params.recipe.id;
+    const recipe = useSelector(getRecipes).find(recipe => recipe.id === recipeId);
     const themeStyle = useTheme();
     const theme = useSelector(getCurrentTheme);
+
+    // Redux dispatcher
+    const dispatch = useDispatch();
     
     const [pickerOpen, setPickerOpen] = useState(false);
     const [currentServings, setCurrentServings] = useState(recipe.servings);
@@ -97,7 +102,17 @@ function FoodDetail({route, navigation}) {
                     <Button 
                         style={{marginRight: 25}} 
                         status='success' 
-                        onPress={ToggleIsEditing}
+                        onPress={() => {
+                            // Save data to redux state
+                            let updatedRecipe = {
+                                ...recipe,
+                                title: newTitle,
+                                ingredients: newIngredients,
+                                servings: currentServings
+                            }
+                            dispatch(updateRecipe(updatedRecipe));
+                            ToggleIsEditing();
+                        }}
                     >Spara</Button>
                 </>
             );
