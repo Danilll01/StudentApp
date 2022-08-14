@@ -42,7 +42,10 @@ function FoodDetail({route, navigation}) {
     const [isEditing, setIsEditing] = useState(false);
 
     const [newTitle, setNewTitle] = useState(recipe.title);
-    const newIngredientsState = useState(recipe.ingredients);
+
+    // Used to make a deep copy of the ingredients array
+    let deepClonedIngredients = () => JSON.parse(JSON.stringify(recipe.ingredients));
+    const newIngredientsState = useState(deepClonedIngredients);
     const [newIngredients, setNewIngredients] = newIngredientsState;
 
     function ToggleIsEditing() {
@@ -52,11 +55,18 @@ function FoodDetail({route, navigation}) {
     // Renders title based on editing state
     function Title() {
         if (isEditing) {
+            let [editedTitle, setEditedTitle] = useState({selected: false, text: ''});
             return (
                 <Input
                     style={{paddingTop: 16, paddingBottom: 16}}
-                    value={newTitle}
-                    onChangeText={text => setNewTitle(text)}
+                    value={editedTitle.selected ? editedTitle.text : recipe.title}
+                    onFocus={() => setEditedTitle({selected: true, text: recipe.title})}
+                    onBlur={() => {
+                        // When finished editing, update the title in the recipe and set the editing state to false
+                        setNewTitle(editedTitle.text);
+                        setEditedTitle({selected: false, text: ''});
+                    }}
+                    onChangeText={text => setEditedTitle({selected: true, text: text})}
                 />
             );
         } else {
@@ -78,6 +88,11 @@ function FoodDetail({route, navigation}) {
                     <Button 
                         style={{marginRight: 5}} 
                         status='danger' 
+                        onPress={() => {
+                            setNewTitle(recipe.title);
+                            setNewIngredients(deepClonedIngredients);
+                            ToggleIsEditing();
+                        }}
                     >Avbryt</Button>
                     <Button 
                         style={{marginRight: 25}} 
@@ -85,7 +100,6 @@ function FoodDetail({route, navigation}) {
                         onPress={ToggleIsEditing}
                     >Spara</Button>
                 </>
-                
             );
         } else {
             return (
