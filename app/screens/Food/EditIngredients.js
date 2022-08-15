@@ -1,9 +1,6 @@
 import React, {useState} from 'react';
 import { Platform, SafeAreaView , ScrollView, Image, Pressable } from 'react-native';
 
-import { useDispatch, useSelector } from 'react-redux';
-import { getCurrentTheme } from '../../redux/themeSlice';
-
 import Units from '../../constants/Units';
 
 // UI library 
