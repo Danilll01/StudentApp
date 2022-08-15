@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
 import { Platform, SafeAreaView , ScrollView, FlatList, TouchableOpacity, StyleSheet } from 'react-native';
 import { SearchBar } from 'react-native-elements';
-import styles from '../ScreenStyle.js';
+import screenStyles from '../ScreenStyle.js';
 import { createStackNavigator } from '@react-navigation/stack';
 
 import { useDispatch, useSelector } from 'react-redux';
-import { getRecipes } from '../../redux/recipesSlice.js';
+import { getRecipes, addRecipe } from '../../redux/recipesSlice.js';
 
 import Tag from '../../components/Tag';
 import RecipeItem from '../../components/RecipeItem';
@@ -17,6 +17,7 @@ import Units from '../../constants/Units.js';
 import * as eva from '@eva-design/eva';
 import { ApplicationProvider, Layout, Text, Card, Button, useTheme, Icon } from '@ui-kitten/components';
 
+import { v4 as uuidv4 } from 'uuid';
 
 const Stack = createStackNavigator();
 
@@ -30,12 +31,13 @@ function Food(props) {
     )
 }
 
-function MainScreen({navigation}) {
+function MainScreen({route, navigation}) {
     const theme = useTheme();
     const [search, setSearch] = useState("");
     const [tags, setTags] = useState([{type: Tags.MEAT, active: false}, {type: Tags.FISH, active: false}, {type: Tags.CHICKEN, active: false}]);
 
     const recipeData = useSelector(getRecipes);
+    const dispatch = useDispatch();
 
     const updateSearch = (search) => {
         setSearch(search);
@@ -52,9 +54,9 @@ function MainScreen({navigation}) {
     }
 
     return (
-        <SafeAreaView style={[styles.container, {backgroundColor: theme['background-basic-color-1'], flex: 1}]}>
+        <SafeAreaView style={[screenStyles.container, {backgroundColor: theme['background-basic-color-1'], flex: 1}]}>
             
-            <Text style={styles.headerText} category='h1'>Vad vill du äta idag?</Text>
+            <Text style={screenStyles.headerText} category='h1'>Vad vill du äta idag?</Text>
 
             <SearchBar 
                 platform={Platform.OS}
@@ -76,11 +78,25 @@ function MainScreen({navigation}) {
             <FlatList style={{padding: 20, backgroundColor: theme['background-basic-color-1']}}
                 data={recipeData}
                 renderItem={recipe => (
-                    <RecipeItem key={recipe.id} recipe={recipe} navigation={navigation} />
+                    <RecipeItem key={recipe.id} recipe={recipe} route={route} navigation={navigation} />
                 )}
                 keyExtractor={recipe => recipe.id} />
 
-            <TouchableOpacity style={[style.addRecipeButton ,{backgroundColor: theme['border-alternative-color-3']}]}>
+            <TouchableOpacity 
+                style={[style.addRecipeButton ,{backgroundColor: theme['border-alternative-color-3']}]}
+                onPress={() => {
+                    let newId = uuidv4();
+                    dispatch(addRecipe({
+                        id: newId,
+                        title: "Nytt recept",
+                        cookTime: 30,
+                        servings: 2,
+                        ingredients: [],
+                        instructions: [],
+                        tags: []
+                    }));
+                    navigation.navigate('Mat', {screen: 'FoodDetail', recipeId: newId, isEditing: true});
+                }}>
                 <Icon name='plus-circle' fill={theme['color-success-500']} style={style.addRecipeButtonIcon} />
             </TouchableOpacity>
         </SafeAreaView>

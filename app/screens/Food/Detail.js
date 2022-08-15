@@ -34,7 +34,8 @@ const servingsChoices = [
 
 
 function FoodDetail({route, navigation}) {
-    let recipeId = route.params.route.params.recipeId;
+    let routeParams = route.params.route?.params;
+    let recipeId = routeParams?.recipeId
     const recipe = useSelector(getRecipes).find(recipe => recipe.id === recipeId);
     const themeStyle = useTheme();
     const theme = useSelector(getCurrentTheme);
@@ -44,7 +45,7 @@ function FoodDetail({route, navigation}) {
     
     const [pickerOpen, setPickerOpen] = useState(false);
     const [currentServings, setCurrentServings] = useState(recipe.servings);
-    const [isEditing, setIsEditing] = useState(false);
+    const [isEditing, setIsEditing] = useState(routeParams.isEditing || false);
 
     const [newTitle, setNewTitle] = useState(recipe.title);
 
