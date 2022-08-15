@@ -1,5 +1,5 @@
-import React, {useState} from 'react';
-import { Platform, SafeAreaView , ScrollView, FlatList } from 'react-native';
+import React, { useState } from 'react';
+import { Platform, SafeAreaView , ScrollView, FlatList, TouchableOpacity, StyleSheet } from 'react-native';
 import { SearchBar } from 'react-native-elements';
 import styles from '../ScreenStyle.js';
 import { createStackNavigator } from '@react-navigation/stack';
@@ -15,7 +15,7 @@ import Units from '../../constants/Units.js';
 
 // UI library 
 import * as eva from '@eva-design/eva';
-import { ApplicationProvider, Layout, Text, Card, Button, useTheme } from '@ui-kitten/components';
+import { ApplicationProvider, Layout, Text, Card, Button, useTheme, Icon } from '@ui-kitten/components';
 
 
 const Stack = createStackNavigator();
@@ -52,9 +52,10 @@ function MainScreen({navigation}) {
     }
 
     return (
-        
-        <SafeAreaView style={[styles.container, {backgroundColor: theme['background-basic-color-1']}]}>
+        <SafeAreaView style={[styles.container, {backgroundColor: theme['background-basic-color-1'], flex: 1}]}>
+            
             <Text style={styles.headerText} category='h1'>Vad vill du äta idag?</Text>
+
             <SearchBar 
                 platform={Platform.OS}
                 placeholder="Sök efter ett recept"
@@ -78,10 +79,26 @@ function MainScreen({navigation}) {
                     <RecipeItem key={recipe.id} recipe={recipe} navigation={navigation} />
                 )}
                 keyExtractor={recipe => recipe.id} />
+
+            <TouchableOpacity style={[style.addRecipeButton ,{backgroundColor: theme['border-alternative-color-3']}]}>
+                <Icon name='plus-circle' fill={theme['color-success-500']} style={style.addRecipeButtonIcon} />
+            </TouchableOpacity>
         </SafeAreaView>
     );
 }
 
-
+const style = StyleSheet.create({
+    addRecipeButton: {
+        position: 'absolute',
+        bottom: 35,
+        right: 15,
+        borderRadius: 99
+    },
+    addRecipeButtonIcon: {
+        width: 72,
+        height: 72,
+        margin: -6
+    },
+});
 
 export default Food;
