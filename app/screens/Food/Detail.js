@@ -135,11 +135,13 @@ function FoodDetail({route, navigation}) {
             return (
                 <Layout style={{flex: 1, flexDirection: 'row'}}>
                     <Layout style={{paddingLeft: 20}}>
-                        {recipe.ingredients.map((ingredient, index) => (
+                        { recipe.ingredients?.length > 0 
+                        ? recipe.ingredients?.map((ingredient, index) => (
                             <Text key={index} category='h6'>
                                 {ingredient.amount && CalculateIngredientAmount(ingredient.amount, currentServings, recipe.servings)} {ingredient.unit}
                             </Text>
-                        ))}
+                        ))
+                        : <Text category='p'>Ingredienser saknas :{"("}</Text> }
                     </Layout>
 
                     <Layout>
