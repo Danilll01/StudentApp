@@ -9,6 +9,7 @@ import { addRecipe, getRecipes, removeRecipe, updateRecipe } from '../../redux/r
 
 import Tag from '../../components/Tag';
 import EditIngredients from './EditIngredients';
+import EditInstructions from './EditInstructions';
 
 // UI library 
 import * as eva from '@eva-design/eva';
@@ -49,10 +50,16 @@ function FoodDetail({route, navigation}) {
 
     const [newTitle, setNewTitle] = useState(recipe.title);
 
-    // Used to make a deep copy of the ingredients array
-    let deepClonedIngredients = () => JSON.parse(JSON.stringify(recipe.ingredients));
-    const newIngredientsState = useState(deepClonedIngredients);
+    // Used to make a deep copy of a json object
+    const deepCopyJSON = (json) => JSON.parse(JSON.stringify(json));
+    
+    // State to keep track of new ingredients
+    const newIngredientsState = useState(deepCopyJSON(recipe.ingredients));
     const [newIngredients, setNewIngredients] = newIngredientsState;
+
+    // State to keep track of new instructions
+    const newInstructionsState = useState(deepCopyJSON(recipe.instructions));
+    const [newInstructions, setNewInstructions] = newInstructionsState;
 
     function ToggleIsEditing() {
         setIsEditing(!isEditing);
@@ -96,7 +103,8 @@ function FoodDetail({route, navigation}) {
                         status='danger' 
                         onPress={() => {
                             setNewTitle(recipe.title);
-                            setNewIngredients(deepClonedIngredients);
+                            setNewIngredients(deepCopyJSON(recipe.ingredients));
+                            setNewInstructions(deepCopyJSON(recipe.instructions));
                             ToggleIsEditing();
                         }}
                     >Avbryt</Button>
@@ -108,8 +116,9 @@ function FoodDetail({route, navigation}) {
                             let updatedRecipe = {
                                 ...recipe,
                                 title: newTitle,
+                                servings: currentServings,
                                 ingredients: newIngredients.filter(ingredient => ingredient.name !== ''), // Remove empty ingredients
-                                servings: currentServings
+                                instructions: newInstructions.filter(instruction => instruction.text !== ''), // Remove empty instructions
                             }
                             dispatch(updateRecipe(updatedRecipe));
                             ToggleIsEditing();
@@ -149,6 +158,22 @@ function FoodDetail({route, navigation}) {
                             <Text key={index} category='h6'>  -  {ingredient.name}</Text>
                         ))}
                     </Layout>
+                </Layout>
+            )
+        }
+    }
+
+    function Instructions() {
+        if (isEditing) {
+            return (
+                <EditInstructions newInstructionsState={newInstructionsState}></EditInstructions>
+            )
+        } else {
+            return (
+                <Layout style={{paddingLeft: 20}}>
+                    {recipe.instructions.map((step, index) => (
+                        <Text key={index} category='h6' style={{paddingBottom: 5}}>{index+1}.  {step}</Text>
+                    ))}
                 </Layout>
             )
         }
@@ -198,12 +223,8 @@ function FoodDetail({route, navigation}) {
                     <Ingredients></Ingredients>
 
                     {/* Renders the instructions */}
-                    <Text category='h5'>Recept</Text>
-                    <Layout style={{paddingLeft: 20}}>
-                        {recipe.instructions.map((step, index) => (
-                            <Text key={index} category='h6' style={{paddingBottom: 5}}>{index+1}.  {step}</Text>
-                        ))}
-                    </Layout>
+                    <Text category='h5' style={{paddingBottom: 10}}>Recept</Text>
+                    <Instructions></Instructions>
                 </Layout>
             </ScrollView>
         </SafeAreaView>
