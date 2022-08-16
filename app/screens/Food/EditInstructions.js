@@ -43,8 +43,15 @@ function EditInstructions({ newInstructionsState }) {
                 )
             }
             )}
+
+            <Button onPress={() => addInstruction()}>Lägg till instruktion</Button>
         </Layout>
     )
+
+    // Adds a new instruction to the list
+    function addInstruction() {
+        setNewInstructions(prevState => [...prevState, '']);
+    }
 }
 
 export default EditInstructions;
