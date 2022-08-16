@@ -45,20 +45,20 @@ function FoodDetail({route, navigation}) {
     const dispatch = useDispatch();
     
     const [pickerOpen, setPickerOpen] = useState(false);
-    const [currentServings, setCurrentServings] = useState(recipe.servings);
+    const [currentServings, setCurrentServings] = useState(recipe?.servings);
     const [isEditing, setIsEditing] = useState(routeParams.isEditing || false);
 
-    const [newTitle, setNewTitle] = useState(recipe.title);
+    const [newTitle, setNewTitle] = useState(recipe?.title);
 
     // Used to make a deep copy of a json object
-    const deepCopyJSON = (json) => JSON.parse(JSON.stringify(json));
+    const deepCopyJSON = (json) => JSON.parse(JSON.stringify(json || {})) ;
     
     // State to keep track of new ingredients
-    const newIngredientsState = useState(deepCopyJSON(recipe.ingredients));
+    const newIngredientsState = useState(deepCopyJSON(recipe?.ingredients));
     const [newIngredients, setNewIngredients] = newIngredientsState;
 
     // State to keep track of new instructions
-    const newInstructionsState = useState(deepCopyJSON(recipe.instructions));
+    const newInstructionsState = useState(deepCopyJSON(recipe?.instructions));
     const [newInstructions, setNewInstructions] = newInstructionsState;
 
     function ToggleIsEditing() {
@@ -72,8 +72,8 @@ function FoodDetail({route, navigation}) {
             return (
                 <Input
                     style={{paddingTop: 16, paddingBottom: 16}}
-                    value={editedTitle.selected ? editedTitle.text : recipe.title}
-                    onFocus={() => setEditedTitle({selected: true, text: recipe.title})}
+                    value={editedTitle.selected ? editedTitle.text : recipe?.title}
+                    onFocus={() => setEditedTitle({selected: true, text: recipe?.title})}
                     onBlur={() => {
                         // When finished editing, update the title in the recipe and set the editing state to false
                         setNewTitle(editedTitle.text);
@@ -84,7 +84,7 @@ function FoodDetail({route, navigation}) {
             );
         } else {
             return (
-                <Text category='h1' style={{paddingTop: 16, paddingBottom: 16}}>{recipe.title}</Text>
+                <Text category='h1' style={{paddingTop: 16, paddingBottom: 16}}>{recipe?.title}</Text>
             );
         }
     }
@@ -97,14 +97,19 @@ function FoodDetail({route, navigation}) {
                         style={{marginLeft: 'auto', marginRight: 5}} 
                         status='danger'
                         accessoryLeft={<Icon name='trash-2-outline' style={{width: 42, height: 42, marginLeft: 15}}/>}
+                        onPress={() => {
+                            // Navigate back and delete the recipe
+                            navigation.goBack();
+                            dispatch(removeRecipe(recipeId));
+                        }}
                     ></Button>
                     <Button 
                         style={{marginRight: 5}} 
                         status='danger' 
                         onPress={() => {
-                            setNewTitle(recipe.title);
-                            setNewIngredients(deepCopyJSON(recipe.ingredients));
-                            setNewInstructions(deepCopyJSON(recipe.instructions));
+                            setNewTitle(recipe?.title);
+                            setNewIngredients(deepCopyJSON(recipe?.ingredients));
+                            setNewInstructions(deepCopyJSON(recipe?.instructions));
                             ToggleIsEditing();
                         }}
                     >Avbryt</Button>
@@ -144,17 +149,17 @@ function FoodDetail({route, navigation}) {
             return (
                 <Layout style={{flex: 1, flexDirection: 'row'}}>
                     <Layout style={{paddingLeft: 20}}>
-                        { recipe.ingredients?.length > 0 
-                        ? recipe.ingredients?.map((ingredient, index) => (
+                        { recipe?.ingredients?.length > 0 
+                        ? recipe?.ingredients?.map((ingredient, index) => (
                             <Text key={index} category='h6'>
                                 {ingredient.amount && CalculateIngredientAmount(ingredient.amount, currentServings, recipe.servings)} {ingredient.unit}
                             </Text>
                         ))
-                        : <Text category='p'>Ingredienser saknas :{"("}</Text> }
+                        : <Text category='p1'>Ingredienser saknas :{"("}</Text> }
                     </Layout>
 
                     <Layout>
-                        {recipe.ingredients.map((ingredient, index) => (
+                        {recipe?.ingredients.map((ingredient, index) => (
                             <Text key={index} category='h6'>  -  {ingredient.name}</Text>
                         ))}
                     </Layout>
@@ -171,7 +176,7 @@ function FoodDetail({route, navigation}) {
         } else {
             return (
                 <Layout style={{paddingLeft: 20}}>
-                    {recipe.instructions.map((step, index) => (
+                    {recipe?.instructions.map((step, index) => (
                         <Text key={index} category='h6' style={{paddingBottom: 5}}>{index+1}.  {step}</Text>
                     ))}
                 </Layout>
@@ -196,9 +201,9 @@ function FoodDetail({route, navigation}) {
                     
                     {/* Renders all tags + time to cook */}
                     <Layout style={{flexDirection: 'row'}}>
-                        <Tag type={Tags.TIME} active={false} nonInteractable={true} text={recipe.cookTime + " minuter"} />
+                        <Tag type={Tags.TIME} active={false} nonInteractable={true} text={recipe?.cookTime + " minuter"} />
 
-                        {recipe.tags.map((tag, index) => {
+                        {recipe?.tags.map((tag, index) => {
                             return <Tag key={index} type={tag.type} active={false} nonInteractable={true} />
                         })}
                     </Layout>
