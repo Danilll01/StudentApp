@@ -123,7 +123,7 @@ function FoodDetail({route, navigation}) {
                                 title: newTitle,
                                 servings: currentServings,
                                 ingredients: newIngredients.filter(ingredient => ingredient.name !== ''), // Remove empty ingredients
-                                instructions: newInstructions.filter(instruction => instruction.text !== ''), // Remove empty instructions
+                                instructions: newInstructions.filter(instruction => instruction !== ''), // Remove empty instructions
                             }
                             dispatch(updateRecipe(updatedRecipe));
                             ToggleIsEditing();
