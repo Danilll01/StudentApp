@@ -28,7 +28,7 @@ function EditIngredients({ newIngredientsState }) {
     // Used to keep track of which ingredient is being edited and only update newIngredients when the user is done editing
     let [currEditAmount, setCurrentEditAmount] = useState(defaultTextEdit);
     let [currEditUnit, setCurrentEditUnit] = useState(defaultTextEdit);
-    let [currEditName, setCurrentEditName] = useState({editingIndex:-1, selectedIndex: -1});
+    let [currEditName, setCurrentEditName] = useState(defaultTextEdit);
 
     return (
         <Layout style={{padding: 10, paddingTop: 0}}>
@@ -40,7 +40,7 @@ function EditIngredients({ newIngredientsState }) {
                         {/* Inputfield for ingredient name */}
                         <Input style={{flex: 1}} label='Ingredient'
                             value={currEditName.editingIndex === index ? currEditName.text : ingredient.name}
-                            onChangeText={text => setCurrentEditName({text,editingIndex:index})}
+                            onChangeText={text => setCurrentEditName({text, editingIndex: index})}
                             // The input field is in focus
                             onFocus={() => setCurrentEditName({editingIndex: index, text: ingredient.name})}
                             // The input lost focus

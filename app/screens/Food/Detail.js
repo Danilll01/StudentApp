@@ -72,8 +72,8 @@ function FoodDetail({route, navigation}) {
             return (
                 <Input
                     style={{paddingTop: 16, paddingBottom: 16}}
-                    value={editedTitle.selected ? editedTitle.text : recipe?.title}
-                    onFocus={() => setEditedTitle({selected: true, text: recipe?.title})}
+                    value={editedTitle.selected ? editedTitle.text : newTitle}
+                    onFocus={() => setEditedTitle({selected: true, text: newTitle})}
                     onBlur={() => {
                         // When finished editing, update the title in the recipe and set the editing state to false
                         setNewTitle(editedTitle.text);
@@ -84,7 +84,7 @@ function FoodDetail({route, navigation}) {
             );
         } else {
             return (
-                <Text category='h1' style={{paddingTop: 16, paddingBottom: 16}}>{recipe?.title}</Text>
+                <Text category='h1' style={{paddingTop: 16, paddingBottom: 16}}>{newTitle}</Text>
             );
         }
     }
