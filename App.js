@@ -31,12 +31,13 @@ const { Navigator, Screen } = createBottomTabNavigator();
 // Used to store persisted state in AsyncStorage
 let persistor = persistStore(Store)
 
-LogBox.ignoreLogs(["EventEmitter.removeListener"]);
-LogBox.ignoreLogs(["Warning: Failed prop type: Invalid props.style key `tintColor` supplied to `Text`."]);
+LogBox.ignoreLogs([
+    "EventEmitter.removeListener",
+    "Warning: Failed prop type: Invalid props.style key `tintColor` supplied to `Text`.",
+    "Non-serializable values were found in the navigation state."
+]);
 
 export default function AppWrapper() {
-
-
     return (
         <Provider store={Store}>
             <PersistGate loading={null} persistor={persistor}>
@@ -48,17 +49,16 @@ export default function AppWrapper() {
 }
 
 function App(props) {
-    const [reloadTheme, setReloadTheme] = useState(false);
-    //const [isDarkmode, setIsDarkmode] = useState(false);
     const theme = useSelector(getCurrentTheme) ?? 'light';
 
     const dispatch = useDispatch();
     
+    // Method to toggle theme
     const handleColorSchemeChange = useCallback((theme) => {
         dispatch(toggleTheme());
-        setReloadTheme(!reloadTheme);
     }, []);
     
+    // Listen to theme changes on IOS and Android
     useEffect(() => {
         Appearance.addChangeListener(handleColorSchemeChange);
         return () => {
@@ -67,15 +67,7 @@ function App(props) {
     }, [handleColorSchemeChange]);
 
     return (
-        // <SafeAreaView style={styles.container}>
-        //   <TouchableOpacity onPress={() => console.log("Hejjja")}>
-        //     <Image source={{ 
-        //       width: 200,
-        //       height: 300,
-        //       uri: "https://picsum.photos/200/300"}} />
-        //   </TouchableOpacity>
-        //   <Button title="Hej" onPress={() => Linking.openURL('canvas-courses://chalmers.instructure.com/courses/15148')}> </Button>
-        // </SafeAreaView>
+        // <Button title="Hej" onPress={() => Linking.openURL('canvas-courses://chalmers.instructure.com/courses/15148')}> </Button>
         
         <ApplicationProvider 
             {...eva} 
@@ -112,9 +104,10 @@ const BottomTabBar = ({ navigation, state }) => (
       <BottomNavigationTab title='Schema' icon={getIcon("bus-sharp")}/>
       <BottomNavigationTab title='Att göra' icon={getIcon("bus-sharp")}/>
     </BottomNavigation>
-  );
+);
 
-function getIcon(name, props){
+// Returns the correct icon for the tab
+function getIcon(name){
     return (
         <Ionicons name={name} size={25} color="tomato" style={{tintColor: 'none'}} />
     )
