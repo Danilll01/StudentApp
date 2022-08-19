@@ -45,8 +45,20 @@ function MainScreen({route, navigation}) {
     // Filter recipes by search query when search query changes or when recipes change
     useEffect(() => {
         let updatedSearchResults = recipeData.filter(recipe => recipe.title.toLowerCase().includes(search.toLowerCase()));
+
+        // If a tag is active, also filter by that tag
+        if (tags.filter(tag => tag.active).length > 0) {
+            updatedSearchResults = updatedSearchResults.filter(recipe => 
+                // Check if recipe has any of the active tags
+                recipe.tags.some(tag => 
+                    // If the tag is active, check if the recipe has the tag
+                    tags.filter(tag => tag.active).map(tag => tag.type).includes(tag)
+                )
+            );
+        }
+        
         setSearchResults(updatedSearchResults);
-    }, [recipeData, search])
+    }, [recipeData, search, tags])
 
     const updateSearch = (search) => {
         setSearch(search);
