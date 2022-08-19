@@ -1,6 +1,7 @@
-import React, {useState} from 'react';
+import React, { useState, useRef } from 'react';
 import { Platform, SafeAreaView , ScrollView, Image, Pressable } from 'react-native';
 import DropDownPicker from 'react-native-dropdown-picker'
+import SimplePicker from 'react-native-simple-picker';
 
 import { useDispatch, useSelector } from 'react-redux';
 import { getCurrentTheme } from '../../redux/themeSlice';
@@ -18,6 +19,7 @@ import { ApplicationProvider, Layout, Text, Card, Button, useTheme , Icon, Input
 import FishImage from '../../assets/TempFishImage.jpg';
 import EditPen from '../../assets/emojis/EditPen';
 import Tags from '../../constants/Tags';
+import { TouchableOpacity } from 'react-native-gesture-handler';
 
 // List of servings choices
 const servingsChoices = [
@@ -49,6 +51,8 @@ function FoodDetail({route, navigation}) {
     const [isEditing, setIsEditing] = useState(routeParams.isEditing || false);
 
     const [newTitle, setNewTitle] = useState(recipe?.title);
+
+    const timePickerRef = useRef(null);
 
     // Used to make a deep copy of a json object
     const deepCopyJSON = (json) => JSON.parse(JSON.stringify(json || {})) ;
@@ -140,6 +144,40 @@ function FoodDetail({route, navigation}) {
         }
     }
 
+    function TagsComponent() {
+        let pickerOptions = ['10', '20', '30', '40', '50', '60', '70', '80', '90', '100']
+        if (isEditing) {
+            return (
+                <Layout style={{flexDirection: 'row'}}>
+                    <TouchableOpacity onPress={() => timePickerRef.current.show()}>
+                        <Tag type={Tags.TIME} active={false} nonInteractable={true} text={recipe?.cookTime + " minuter"} />
+                    </TouchableOpacity>
+
+                    <SimplePicker
+                        ref={timePickerRef}
+                        options={pickerOptions}
+                        >
+                    </SimplePicker>
+
+                    {recipe?.tags.map((tag, index) => {
+                        return <Tag key={index} type={tag.type} active={false} nonInteractable={true} />
+                    })}
+                </Layout>
+            )
+            
+        } else {
+            return (
+                <Layout style={{flexDirection: 'row'}}>
+                    <Tag type={Tags.TIME} active={false} nonInteractable={true} text={recipe?.cookTime + " minuter"} />
+
+                    {recipe?.tags.map((tag, index) => {
+                        return <Tag key={index} type={tag.type} active={false} nonInteractable={true} />
+                    })}
+                </Layout>
+            )
+        }
+    }
+
     function Ingredients() {
         if (isEditing) {
             return (
@@ -200,13 +238,7 @@ function FoodDetail({route, navigation}) {
                     <Title></Title>
                     
                     {/* Renders all tags + time to cook */}
-                    <Layout style={{flexDirection: 'row'}}>
-                        <Tag type={Tags.TIME} active={false} nonInteractable={true} text={recipe?.cookTime + " minuter"} />
-
-                        {recipe?.tags.map((tag, index) => {
-                            return <Tag key={index} type={tag.type} active={false} nonInteractable={true} />
-                        })}
-                    </Layout>
+                    <TagsComponent></TagsComponent>
                     
                     {/* Renders the servings picker */}
                     <Layout style={{flex: 1, flexDirection: 'row', zIndex: 100, alignItems: 'center'}}>
