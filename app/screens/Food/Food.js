@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Platform, SafeAreaView , ScrollView, FlatList, TouchableOpacity, StyleSheet } from 'react-native';
 import { SearchBar } from 'react-native-elements';
 import screenStyles from '../ScreenStyle.js';
@@ -33,11 +33,20 @@ function Food(props) {
 
 function MainScreen({route, navigation}) {
     const theme = useTheme();
+    const dispatch = useDispatch();
+
     const [search, setSearch] = useState("");
+    const [searchResults, setSearchResults] = useState(useSelector(getRecipes));
+
     const [tags, setTags] = useState([{type: Tags.MEAT, active: false}, {type: Tags.FISH, active: false}, {type: Tags.CHICKEN, active: false}]);
 
     const recipeData = useSelector(getRecipes);
-    const dispatch = useDispatch();
+
+    // Filter recipes by search query when search query changes or when recipes change
+    useEffect(() => {
+        let updatedSearchResults = recipeData.filter(recipe => recipe.title.toLowerCase().includes(search.toLowerCase()));
+        setSearchResults(updatedSearchResults);
+    }, [recipeData, search])
 
     const updateSearch = (search) => {
         setSearch(search);
@@ -76,7 +85,7 @@ function MainScreen({route, navigation}) {
                 )}
             </Layout>
             <FlatList style={{padding: 20, backgroundColor: theme['background-basic-color-1']}}
-                data={recipeData}
+                data={searchResults}
                 renderItem={recipe => (
                     <RecipeItem key={recipe.id} recipe={recipe} route={route} navigation={navigation} />
                 )}
