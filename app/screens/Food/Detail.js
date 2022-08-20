@@ -1,5 +1,5 @@
 import React, { useState, useRef } from 'react';
-import { Platform, SafeAreaView , ScrollView, Image, Pressable } from 'react-native';
+import { Platform, SafeAreaView , ScrollView, Image, Pressable, StyleSheet, LogBox } from 'react-native';
 import DropDownPicker from 'react-native-dropdown-picker'
 import SimplePicker from 'react-native-simple-picker';
 
@@ -34,6 +34,8 @@ const servingsChoices = [
     {label: '9', value: 9},
     {label: '10', value: 10},
 ];
+
+LogBox.ignoreLogs(['Animated: `useNativeDriver`']);
 
 
 function FoodDetail({route, navigation}) {
@@ -146,6 +148,11 @@ function FoodDetail({route, navigation}) {
 
     function TagsComponent() {
         let pickerOptions = ['10', '20', '30', '40', '50', '60', '70', '80', '90', '100']
+        let pickerTextStyle = {
+            color: themeStyle['text-basic-color'], 
+            fontSize: 18
+        }
+        
         if (isEditing) {
             return (
                 <Layout style={{flexDirection: 'row'}}>
@@ -156,6 +163,13 @@ function FoodDetail({route, navigation}) {
                     <SimplePicker
                         ref={timePickerRef}
                         options={pickerOptions}
+                        styles={{
+                            mainBox: {backgroundColor: themeStyle['background-basic-color-1']},
+                            buttonView: [timePickerStyle.buttonView, {backgroundColor: themeStyle['background-basic-color-1']}]
+                        }}
+                        itemStyle={{color: themeStyle['text-basic-color']}}
+                        cancelTextStyle={pickerTextStyle}
+                        confirmTextStyle={pickerTextStyle}
                         >
                     </SimplePicker>
 
@@ -274,5 +288,16 @@ function CalculateIngredientAmount(amount, currentServings, designedServings) {
     let roundedAmount = Math.round(realAmount * 10) / 10;
     return roundedAmount;
 }
+
+const timePickerStyle = StyleSheet.create({
+    buttonView: {
+		width: '100%',
+		padding: 10,
+		borderTopWidth: 0.5,
+		borderTopColor: 'lightgrey',
+		justifyContent: 'space-between',
+		flexDirection: 'row',
+	},
+});
 
 export default FoodDetail;
