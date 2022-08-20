@@ -53,6 +53,7 @@ function FoodDetail({route, navigation}) {
     const [isEditing, setIsEditing] = useState(routeParams.isEditing || false);
 
     const [newTitle, setNewTitle] = useState(recipe?.title);
+    const [newCooktime, setNewCooktime] = useState(recipe?.cooktime || 0);
 
     const timePickerRef = useRef(null);
 
@@ -114,6 +115,7 @@ function FoodDetail({route, navigation}) {
                         status='danger' 
                         onPress={() => {
                             setNewTitle(recipe?.title);
+                            setNewCooktime(recipe?.cooktime);
                             setNewIngredients(deepCopyJSON(recipe?.ingredients));
                             setNewInstructions(deepCopyJSON(recipe?.instructions));
                             ToggleIsEditing();
@@ -127,6 +129,7 @@ function FoodDetail({route, navigation}) {
                             let updatedRecipe = {
                                 ...recipe,
                                 title: newTitle,
+                                cookTime: newCooktime,
                                 servings: currentServings,
                                 ingredients: newIngredients.filter(ingredient => ingredient.name !== ''), // Remove empty ingredients
                                 instructions: newInstructions.filter(instruction => instruction !== ''), // Remove empty instructions
@@ -147,22 +150,29 @@ function FoodDetail({route, navigation}) {
     }
 
     function TagsComponent() {
-        let pickerOptions = ['10', '20', '30', '40', '50', '60', '70', '80', '90', '100']
+        let nrPickerOptions = 70;
+        let pickerNrInterval = 5;
+        let pickerOptions = [ ...Array(nrPickerOptions).keys() ].map( i => String((i+1) * pickerNrInterval) + " min");
         let pickerTextStyle = {
             color: themeStyle['text-basic-color'], 
             fontSize: 18
         }
-        
+
         if (isEditing) {
             return (
                 <Layout style={{flexDirection: 'row'}}>
                     <TouchableOpacity onPress={() => timePickerRef.current.show()}>
-                        <Tag type={Tags.TIME} active={false} nonInteractable={true} text={recipe?.cookTime + " minuter"} />
+                        <Tag type={Tags.TIME} active={false} nonInteractable={true} text={newCooktime + " minuter"} />
                     </TouchableOpacity>
 
                     <SimplePicker
                         ref={timePickerRef}
                         options={pickerOptions}
+                        initialOptionIndex={newCooktime / pickerNrInterval - 1}
+                        onSubmit={(option) => {
+                            // When finished editing, update the new cooktime state
+                            setNewCooktime(parseInt(option.split(" ")[0]));
+                        }}
                         styles={{
                             mainBox: {backgroundColor: themeStyle['background-basic-color-1']},
                             buttonView: [timePickerStyle.buttonView, {backgroundColor: themeStyle['background-basic-color-1']}]
