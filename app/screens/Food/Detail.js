@@ -53,7 +53,7 @@ function FoodDetail({route, navigation}) {
     const [isEditing, setIsEditing] = useState(routeParams.isEditing || false);
 
     const [newTitle, setNewTitle] = useState(recipe?.title);
-    const [newCooktime, setNewCooktime] = useState(recipe?.cooktime || 0);
+    const [newCooktime, setNewCooktime] = useState(recipe?.cookTime);
 
     const timePickerRef = useRef(null);
 
@@ -193,9 +193,9 @@ function FoodDetail({route, navigation}) {
             return (
                 <Layout style={{flexDirection: 'row'}}>
                     <Tag type={Tags.TIME} active={false} nonInteractable={true} text={recipe?.cookTime + " minuter"} />
-
+                    
                     {recipe?.tags.map((tag, index) => {
-                        return <Tag key={index} type={tag.type} active={false} nonInteractable={true} />
+                        return <Tag key={index} type={tag} active={false} nonInteractable={true} />
                     })}
                 </Layout>
             )
