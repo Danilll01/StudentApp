@@ -31,6 +31,7 @@
     "description": "",
     "plugins": [
       "expo-location"
-    ]
+    ],
+    "userInterfaceStyle": "automatic"
   }
 }
