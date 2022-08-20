@@ -11,7 +11,7 @@ const persistConfig = {
 	key: "root",
 	version: 1,
 	storage: AsyncStorage,
-    whitelist: ['theme']
+    whitelist: ['theme', 'recipes']
 }
 const rootReducer = combineReducers({
 	theme: themeReducer,
