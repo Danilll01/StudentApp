@@ -88,7 +88,7 @@ function MainScreen({route, navigation}) {
                 lightTheme={true}
                 containerStyle={{ backgroundColor: theme['background-basic-color-1']}}
             />
-            <Layout style={{flexDirection: 'row', paddingLeft: 10}}>
+            <Layout style={{flexDirection: 'row', paddingLeft: 10, paddingBottom: 10}}>
                 {tags.map(tag => {
                         return (
                             <Tag key={tag.type} type={tag.type} active={tag.active} onPress={() => setActiveTag(tag.type)} />
@@ -101,7 +101,8 @@ function MainScreen({route, navigation}) {
                 renderItem={recipe => (
                     <RecipeItem key={recipe.id} recipe={recipe} route={route} navigation={navigation} />
                 )}
-                keyExtractor={recipe => recipe.id} />
+                keyExtractor={recipe => recipe.id} 
+                ListEmptyComponent={<Text category='h5' style={{flex: 1, alignSelf: 'center'}} >Inga resultat {":("}</Text>} />
 
             <TouchableOpacity 
                 style={[style.addRecipeButton ,{backgroundColor: theme['border-alternative-color-3']}]}
