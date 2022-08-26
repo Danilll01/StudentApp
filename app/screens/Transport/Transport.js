@@ -1,20 +1,20 @@
 import React, {Component, useState, useEffect, useCallback} from 'react';
 import axios from 'axios';
 import { SafeAreaView, ScrollView, RefreshControl, Linking } from 'react-native';
-import styles from './ScreenStyle.js'
+import styles from '../ScreenStyle.js'
 
 // UI library 
 import * as eva from '@eva-design/eva';
 import { Layout, Text, Card, Button, useTheme, Icon } from '@ui-kitten/components';
 
-import VtStopWidget from '../widgets/VtStopWidget.js';
-import { getData, storeData } from '../DataStorage.js';
+import VtStopWidget from '../../widgets/VtStopWidget.js';
+import { getData, storeData } from '../../DataStorage.js';
 
 import uuid from 'react-native-uuid';
 import { usePromiseTracker, trackPromise } from "react-promise-tracker";
 import qs from 'qs-stringify';
-import VTkey from '../APIKey.js';
-import locationHandler from '../LocationHandler.js';
+import VTkey from '../../APIKey.js';
+import locationHandler from '../../LocationHandler.js';
 
 
 
@@ -107,7 +107,7 @@ function DateToFormattedString(d) {
 function getUniqueStations(stations) {
     let uniqueStations = new Map();
 
-    stations.map(station => {
+    stations?.map(station => {
         // Add station to map if not already in map
         if (!uniqueStations.has(station.name)) {
             uniqueStations.set(station.name, station.id);

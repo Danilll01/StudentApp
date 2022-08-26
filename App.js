@@ -22,7 +22,7 @@ import { default as darkTheme } from './app/themes/dark.json';
 import { default as lightTheme } from './app/themes/light.json';
 
 import HomeScreen from './app/screens/HomeScreen';
-import TransportScreen from './app/screens/TransportScreen';
+import TransportScreen from './app/screens/Transport/Transport';
 import FoodScreen from './app/screens/Food/Food';
 import ScheduleScreen from './app/screens/ScheduleScreen';
 
