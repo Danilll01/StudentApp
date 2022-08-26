@@ -119,23 +119,23 @@ function getUniqueStations(stations) {
 // Helper funtions END
 
 const getToken = async () => {
-  const id = uuid.v4();
-  const res = await axios
-    .post(
-        "https://api.vasttrafik.se/token",
-      qs({
-        grant_type: "client_credentials",
-        scope: id
-      }),
-      {
-        headers: {
-          "Authorization": `Basic ${VTkey}`,
-          "Access-Control-Allow-Origin": "*",
-          "Content-Type": "application/x-www-form-urlencoded;"
+    const id = uuid.v4();
+    const res = await axios
+        .post(
+            "https://api.vasttrafik.se/token",
+        qs({
+            grant_type: "client_credentials",
+            scope: id
+        }),
+        {
+            headers: {
+            "Authorization": `Basic ${VTkey}`,
+            "Access-Control-Allow-Origin": "*",
+            "Content-Type": "application/x-www-form-urlencoded;"
+            }
         }
-      }
     );
-    
+
     return {
         id,
         expiry: new Date().getTime() + res.data.expires_in * 1000,
@@ -155,73 +155,71 @@ function GenerateAndStoreToken() {
 };
 
 const GetDepatureBoard = async (stopId) => {
-  console.log("Calling Dep API")
+    console.log("Calling Dep API")
 
-  let APIEndpoint = "https://api.vasttrafik.se/bin/rest.exe/v2/departureBoard?";
+    let APIEndpoint = "https://api.vasttrafik.se/bin/rest.exe/v2/departureBoard?";
 
-  let payload = qs({
-    id: stopId, // 9021014014715000
-    date: DateToFormattedString(new Date()), // YYYY-MM-DD
-    time: new Date().toTimeString().split(':').slice(0,2).join(':'), // HH:mm
-    timeSpan: 120,
-    format: "json",
-    needJourneyDetail: 0,
-  });
-  
-  let res = await CallVTAPIWithPayload(APIEndpoint, payload);
-  return {res};
+    let payload = qs({
+        id: stopId, // 9021014014715000
+        date: DateToFormattedString(new Date()), // YYYY-MM-DD
+        time: new Date().toTimeString().split(':').slice(0,2).join(':'), // HH:mm
+        timeSpan: 120,
+        format: "json",
+        needJourneyDetail: 0,
+    });
+    
+    let res = await CallVTAPIWithPayload(APIEndpoint, payload);
+    return {res};
 }
 
 const GetNearestStop = async (GPSlat, GPSlon) => {
-  let APIEndpoint = "https://api.vasttrafik.se/bin/rest.exe/v2/location.nearbystops?";
+    let APIEndpoint = "https://api.vasttrafik.se/bin/rest.exe/v2/location.nearbystops?";
 
-  let payload = qs({
-    originCoordLat: GPSlat,  // 57.706717, Test location
-    originCoordLong: GPSlon, // 11.968428,
-    maxNo: 100,
-    format: "json",
-  });
+    let payload = qs({
+        originCoordLat: GPSlat,  // 57.706717, Test location
+        originCoordLong: GPSlon, // 11.968428,
+        maxNo: 100,
+        format: "json",
+    });
 
-  let res = await CallVTAPIWithPayload(APIEndpoint, payload);
+    let res = await CallVTAPIWithPayload(APIEndpoint, payload);
 
-  return {res};
+    return {res};
 }
 
 // Calls västtrafiks api with provided endpoint and payload
 const CallVTAPIWithPayload = async (APIEndpoint, payload) => {
-  let VTaccessToken;
+    let VTaccessToken;
 
-  // Retreive active token
-  await getData('@tokenDataVT').then((token) => {
-      VTaccessToken = token.access_token;
-  })
+    // Retreive active token
+    await getData('@tokenDataVT').then((token) => {
+        VTaccessToken = token.access_token;
+    })
 
-  // Make request to api endpoint
-  const res = await axios
-  .get(
-      APIEndpoint + payload,
-    {
-      // Use access token
-      headers: {
-        "Authorization": `Bearer ${VTaccessToken}`,
-      } 
-    }
-  ).catch(err => {
-    console.log(err.message);
-  })
+    // Make request to api endpoint
+    const res = await axios
+    .get(
+        APIEndpoint + payload,
+        {
+        // Use access token
+        headers: {
+            "Authorization": `Bearer ${VTaccessToken}`,
+        } 
+        }
+    ).catch(err => {
+        console.log(err.message);
+    })
 
-  return res;
+    return res;
 }
 
 const LoadingIndicator = props => {
-  const { promiseInProgress } = usePromiseTracker();
+    const { promiseInProgress } = usePromiseTracker();
 
     return (
-    promiseInProgress && 
-    <Text>Hämtar västtrafik data</Text>
-  );  
+        promiseInProgress && 
+        <Text>Hämtar västtrafik data</Text>
+    );  
 }
-
-
 
 export default TransportScreen;
