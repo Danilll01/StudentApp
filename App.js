@@ -76,7 +76,7 @@ function App(props) {
             <Layout style={{flex:1}}>
                 <StatusBar barStyle={theme === 'light' ? "dark-content" : "light-content"} />
                 <NavigationContainer>
-                    <Navigator initialRouteName = {"Mat"} 
+                    <Navigator initialRouteName = {"Transport"} 
                         tabBar={props => <BottomTabBar {...props} />}
                         screenOptions={{headerShown: false}} >
                     <Screen name="Transport" component={TransportScreen} />

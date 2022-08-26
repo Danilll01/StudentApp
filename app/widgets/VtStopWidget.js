@@ -24,28 +24,21 @@ function VtStopWidget(props) {
         let mounted = true;
         
         if(mounted) {
-            setDepartureList([]);
             let depBoardData = props.depBoardData;
             
-            //if (typeof depBoardData !== undefined) {
-                //console.log(props);
-                //console.log(props.props.DepartureBoard.Departure.slice(0, 5));
-                if (typeof depBoardData.DepartureBoard.Departure !== undefined) {
-                    setDepartureList(depBoardData.DepartureBoard.Departure.slice(0,6));
-                };
-            //};
+            setDepartureList(depBoardData?.DepartureBoard?.Departure.slice(0,6));
         };
         
         mounted = false;
         return () => {
             mounted = false;
         }
-    }, [props])
+    }, [props.depBoardData])
     
     
     return (
         <View style={styles.basicWidget}>
-            <Text h1 style={styles.basicWidgetHeader}>
+            <Text category='h1' style={styles.basicWidgetHeader}>
                 {(typeof departureList === undefined) || (departureList.length == 0) ? "test" : departureList[0].stop.split(',')[0]}
             </Text>
             {departureList.map((ride) => {

@@ -1,7 +1,12 @@
 import React, {Component, useState, useEffect, useCallback} from 'react';
 import axios from 'axios';
-import { SafeAreaView, View, Text, ScrollView, RefreshControl, Button, Linking } from 'react-native';
+import { SafeAreaView, ScrollView, RefreshControl, Linking } from 'react-native';
 import styles from './ScreenStyle.js'
+
+// UI library 
+import * as eva from '@eva-design/eva';
+import { Layout, Text, Card, Button, useTheme, Icon } from '@ui-kitten/components';
+
 import VtStopWidget from '../widgets/VtStopWidget.js';
 import { getData, storeData } from '../DataStorage.js';
 
@@ -14,6 +19,8 @@ import locationHandler from '../LocationHandler.js';
 
 
 function TransportScreen() {
+    const theme = useTheme();
+
     const [stationSearch, setStationSearch] = useState([]);
     const [departureBoards, setDepartureBoards] = useState([]);
     const [nearestStop, setNearestStop] = useState([]);
@@ -21,50 +28,47 @@ function TransportScreen() {
     const [refreshing, setRefreshing] = useState();
     
     const refreshJourneys = React.useCallback(async () => {
-      setRefreshing(true);
-      console.log("Refreshing journeys");
+        setRefreshing(true);
+        console.log("Refreshing journeys");
 
-      GenerateAndStoreToken();
+        GenerateAndStoreToken();
 
-      trackPromise( locationHandler().then((res) => {
-        setLocation(res);
-        GetNearestStop(res.coords.latitude, res.coords.longitude).then(res => {
-          setDepartureBoards([]); // Might want to update data rather than clearing and fetching new
+        trackPromise( locationHandler().then((res) => {
+            setLocation(res);
+            GetNearestStop(res.coords.latitude, res.coords.longitude).then(res => {
+            setDepartureBoards([]); // Might want to update data rather than clearing and fetching new
 
-          // Only proceed if we data from the api
-          if (typeof res.res.data !== undefined) {
-            let stations = res.res.data.LocationList.StopLocation;
+            // Only proceed if we data from the api
+            let stations = res?.res?.data.LocationList.StopLocation;
             let uniqueStations = getUniqueStations(stations);
             console.log(uniqueStations)
             uniqueStations.map(station => {
-              GetDepatureBoard(parseInt(station)).then(depBoard => {
+                GetDepatureBoard(parseInt(station)).then(depBoard => {
                 setDepartureBoards(depBoards => [...depBoards, depBoard.res.data]);
-                
-              })
+                })
             })
-          }
-        })
-      }));
+            })
+        }));
 
-      setRefreshing(false);
-    }, [refreshing]);
+        setRefreshing(false);
+    }, []);
 
     useEffect(() => {
-      let mounted = true;
+        let mounted = true;
 
-      if(mounted) {
-        refreshJourneys();
-      }
+        if(mounted) {
+            refreshJourneys();
+        }
 
-      mounted = false;
-
-      return () => {
         mounted = false;
-      }
+
+        return () => {
+            mounted = false;
+        }
     }, []);
 
     return (
-        <SafeAreaView style={styles.container}>
+        <SafeAreaView style={[styles.container, {backgroundColor: theme['background-basic-color-1']}]}>
             <ScrollView 
               refreshControl={
                 <RefreshControl
@@ -73,15 +77,15 @@ function TransportScreen() {
                 />
               }>
                 <Text style={styles.headerText}>Kollektivtrafik 🚍</Text>
-                <View style={styles.widgetArea}>
+                <Layout style={styles.widgetArea}>
                     {/* <Button title="Hej" onPress={() => Linking.openURL('vaesttrafik://query?Z=Korsv%C3%A4gen%2C+G%C3%B6teborg&start')}> </Button> */}
                     
                     <LoadingIndicator/>
                     
-                    {departureBoards.map((depBoard) => {
-                      return <VtStopWidget key={depBoard.DepartureBoard.Departure[0].stop} depBoardData={depBoard}></VtStopWidget> 
+                    {departureBoards?.map((depBoard, index) => {
+                      return <VtStopWidget key={index} depBoardData={depBoard}></VtStopWidget> //depBoard?.DepartureBoard?.Departure[0]?.stop
                     })}
-                </View>
+                </Layout>
             </ScrollView>
         </SafeAreaView>
     );
@@ -90,28 +94,27 @@ function TransportScreen() {
 
 // Helper functions 
 function DateToFormattedString(d) {         
-  let yyyy = d.getFullYear().toString();                                    
-  let mm = (d.getMonth()+1).toString(); // getMonth() is zero-based         
-  let dd  = d.getDate().toString();
+    let yyyy = d.getFullYear().toString();                                    
+    let mm = (d.getMonth()+1).toString(); // getMonth() is zero-based         
+    let dd  = d.getDate().toString();
 
-  let mmString = (mm[1] ? mm : "0" + mm[0]);
-  let ddString = (dd[1] ? dd : "0" + dd[0]);
+    let mmString = (mm[1] ? mm : "0" + mm[0]);
+    let ddString = (dd[1] ? dd : "0" + dd[0]);
 
-  return yyyy + '-' + mmString + '-' + ddString;
+    return yyyy + '-' + mmString + '-' + ddString;
 };  
 
 function getUniqueStations(stations) {
-  let uniqueStations = new Map();
+    let uniqueStations = new Map();
 
-  stations.map(station => {
-    // Add station to map if not already in map
-    if (!uniqueStations.has(station.name)) {
-      uniqueStations.set(station.name, station.id);
-    }
-    
-  });
-  
-  return Array.from(uniqueStations.values());
+    stations.map(station => {
+        // Add station to map if not already in map
+        if (!uniqueStations.has(station.name)) {
+            uniqueStations.set(station.name, station.id);
+        }
+    });
+
+    return Array.from(uniqueStations.values());
 }
 // Helper funtions END
 
@@ -132,11 +135,12 @@ const getToken = async () => {
         }
       }
     );
-  return {
-    id,
-    expiry: new Date().getTime() + res.data.expires_in * 1000,
-    ...res.data
-  };
+    
+    return {
+        id,
+        expiry: new Date().getTime() + res.data.expires_in * 1000,
+        ...res.data
+    };
 };
 
 function GenerateAndStoreToken() {
