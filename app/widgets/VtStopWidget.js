@@ -3,37 +3,28 @@ import { View, Text, StyleSheet } from 'react-native';
 import styles from './WidgetStyles.js';
 import moment from "moment";
 
-function getDepTimeDiff(date, time) {
-    var ms = moment(moment(date + " " + time,"YYYY-MM-DD HH:mm")).diff(moment().format("YYYY-MM-DD HH:mm"));
-    var d = moment.duration(ms);
-    var s;
-    if (d.asMinutes() <= 0) {
-        s = "Nu"
-      } else if(d.hours() !== 0) {
-        s = time;
-       } else {
-        s = moment.utc(ms).format("m") + " min";
-      }
-    return s;
-}
+import { GenerateAndStoreToken, GetDepatureBoard, GetNearestStop } from '../screens/Transport/Vasttrafik.js';
 
-function VtStopWidget(props) {
+const MAX_DISPLAY_RIDES = 6;
+
+function VtStopWidget({ stopID, latestUpdate }) {
     const [departureList, setDepartureList] = useState([]);
     
     useEffect(() => {
         let mounted = true;
         
         if(mounted) {
-            let depBoardData = props.depBoardData;
-            
-            setDepartureList(depBoardData?.DepartureBoard?.Departure.slice(0,6));
+            GetDepatureBoard(parseInt(stopID)).then(depBoard => {
+                // Supply departured board with fetched data
+                setDepartureList(depBoard?.res?.data?.DepartureBoard?.Departure?.slice(0,MAX_DISPLAY_RIDES));
+            })
         };
         
         mounted = false;
         return () => {
             mounted = false;
         }
-    }, [props.depBoardData])
+    }, [latestUpdate])
     
     
     return (
@@ -41,9 +32,9 @@ function VtStopWidget(props) {
             <Text category='h1' style={styles.basicWidgetHeader}>
                 {(typeof departureList === undefined) || (departureList.length == 0) ? "test" : departureList[0].stop.split(',')[0]}
             </Text>
-            {departureList.map((ride) => {
+            {departureList.map((ride, index) => {
                 return (
-                <View style={VtStopWidgetStyle.rideItem} key={ride.journeyid + ride.stopid}>
+                <View key={index} style={VtStopWidgetStyle.rideItem} >
                     <View style={{backgroundColor: ride.bgColor, width: 45, height: 33, borderRadius: 5, justifyContent: 'center'}}>
                         <Text style={{color: ride.fgColor, textAlign: 'center', fontWeight: 'bold', fontSize: 14,}}>{ride.sname}</Text>
                     </View>
@@ -66,5 +57,20 @@ const VtStopWidgetStyle = StyleSheet.create({
         paddingLeft:5,
     }
 })
+
+// Returns the time difference between the current time and the departure time
+function getDepTimeDiff(date, time) {
+    var ms = moment(moment(date + " " + time,"YYYY-MM-DD HH:mm")).diff(moment().format("YYYY-MM-DD HH:mm"));
+    var d = moment.duration(ms);
+    var s;
+    if (d.asMinutes() <= 0) {
+        s = "Nu"
+      } else if(d.hours() !== 0) {
+        s = time;
+       } else {
+        s = moment.utc(ms).format("m") + " min";
+      }
+    return s;
+}
 
 export default VtStopWidget;

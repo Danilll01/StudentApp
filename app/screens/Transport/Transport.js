@@ -17,7 +17,8 @@ import locationHandler from '../../LocationHandler.js';
 function TransportScreen() {
     const theme = useTheme();
 
-    const [departureBoards, setDepartureBoards] = useState([]);
+    const [nearStopIDs, setNearStopIDs] = useState([]);
+    const [latestUpdate, setLatestUpdate] = useState(Date.now());
     const [location, setLocation] = useState([]);
     const [refreshing, setRefreshing] = useState();
     
@@ -30,18 +31,19 @@ function TransportScreen() {
         trackPromise( locationHandler().then((res) => {
             setLocation(res);
             GetNearestStop(res.coords.latitude, res.coords.longitude).then(res => {
-            setDepartureBoards([]); // Might want to update data rather than clearing and fetching new
 
-            // Only proceed if we data from the api
-            let stations = res?.res?.data.LocationList.StopLocation;
-            let uniqueStations = getUniqueStations(stations);
-            console.log(uniqueStations)
-            uniqueStations.map(station => {
-                GetDepatureBoard(parseInt(station)).then(depBoard => {
-                setDepartureBoards(depBoards => [...depBoards, depBoard.res.data]);
-                })
+                // Get unique stations
+                let stations = res?.res?.data.LocationList.StopLocation;
+                let uniqueStations = getUniqueStations(stations);
+
+                // Update stop IDs and latest update
+                setNearStopIDs(uniqueStations.sort());
+                setLatestUpdate(Date.now());
+
+            }).catch(err => {
+                console.log(err);
             })
-            })
+
         }));
 
         setRefreshing(false);
@@ -76,8 +78,8 @@ function TransportScreen() {
                     
                     <LoadingIndicator/>
                     
-                    {departureBoards?.map((depBoard, index) => {
-                      return <VtStopWidget key={index} depBoardData={depBoard}></VtStopWidget> //depBoard?.DepartureBoard?.Departure[0]?.stop
+                    {nearStopIDs?.map((stopID) => {
+                      return <VtStopWidget key={stopID} stopID={stopID} latestUpdate={latestUpdate}></VtStopWidget> //depBoard?.DepartureBoard?.Departure[0]?.stop
                     })}
                 </Layout>
             </ScrollView>
