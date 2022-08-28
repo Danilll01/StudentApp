@@ -9,28 +9,28 @@ const MAX_DISPLAY_RIDES = 6;
 
 function VtStopWidget({ stopID, latestUpdate }) {
     const [departureList, setDepartureList] = useState([]);
+    const [refreshing, setRefreshing] = useState(false);
     
     useEffect(() => {
-        let mounted = true;
+        setRefreshing(true);
         
-        if(mounted) {
-            GetDepatureBoard(parseInt(stopID)).then(depBoard => {
-                // Supply departured board with fetched data
-                setDepartureList(depBoard?.res?.data?.DepartureBoard?.Departure?.slice(0,MAX_DISPLAY_RIDES));
-            })
-        };
+        GenerateAndStoreToken();
+
+        GetDepatureBoard(parseInt(stopID)).then(depBoard => {
+            // Supply departured board with fetched data
+            let depList = depBoard?.res?.data?.DepartureBoard?.Departure || [];
+
+            setDepartureList(depList.slice(0,MAX_DISPLAY_RIDES));
+
+            setRefreshing(false);
+        })
         
-        mounted = false;
-        return () => {
-            mounted = false;
-        }
     }, [latestUpdate])
-    
     
     return (
         <View style={styles.basicWidget}>
             <Text category='h1' style={styles.basicWidgetHeader}>
-                {(typeof departureList === undefined) || (departureList.length == 0) ? "test" : departureList[0].stop.split(',')[0]}
+                {(typeof departureList === undefined) || (departureList.length == 0) ? "Inga avgångar" : departureList[0].stop.split(',')[0]}
             </Text>
             {departureList.map((ride, index) => {
                 return (
