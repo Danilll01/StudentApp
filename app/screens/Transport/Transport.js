@@ -72,14 +72,15 @@ function TransportScreen() {
                   onRefresh={refreshJourneys}
                 />
               }>
-                <Text style={styles.headerText}>Kollektivtrafik 🚍</Text>
+                <Text style={[styles.headerText, {paddingBottom: 4}]}>Kollektivtrafik 🚍</Text>
+                <Text category='label' style={{paddingLeft: 20, paddingBottom: 10}}>Data hämtad {new Date(latestUpdate).toLocaleTimeString()}</Text>
                 <Layout style={styles.widgetArea}>
                     {/* <Button title="Hej" onPress={() => Linking.openURL('vaesttrafik://query?Z=Korsv%C3%A4gen%2C+G%C3%B6teborg&start')}> </Button> */}
                     
                     <LoadingIndicator/>
                     
                     {nearStopIDs?.map((stopID) => {
-                      return <VtStopWidget key={stopID} stopID={stopID} latestUpdate={latestUpdate}></VtStopWidget> //depBoard?.DepartureBoard?.Departure[0]?.stop
+                      return <VtStopWidget key={stopID} stopID={stopID} latestUpdate={latestUpdate}></VtStopWidget>
                     })}
                 </Layout>
             </ScrollView>
