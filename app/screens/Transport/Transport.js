@@ -17,7 +17,7 @@ import locationHandler from '../../LocationHandler.js';
 function TransportScreen() {
     const theme = useTheme();
 
-    const [nearStopIDs, setNearStopIDs] = useState([]);
+    const [nearStops, setNearStops] = useState([]);
     const [latestUpdate, setLatestUpdate] = useState(Date.now());
     const [location, setLocation] = useState([]);
     const [refreshing, setRefreshing] = useState();
@@ -37,7 +37,7 @@ function TransportScreen() {
                 let uniqueStations = getUniqueStations(stations);
 
                 // Update stop IDs and latest update
-                setNearStopIDs(uniqueStations);
+                setNearStops(uniqueStations);
                 setLatestUpdate(Date.now());
 
             }).catch(err => {
@@ -79,8 +79,8 @@ function TransportScreen() {
                     
                     <LoadingIndicator/>
                     
-                    {nearStopIDs?.map((stopID) => {
-                      return <VtStopWidget key={stopID} stopID={stopID} latestUpdate={latestUpdate}></VtStopWidget>
+                    {nearStops?.map((stop) => {
+                      return <VtStopWidget key={stop.id} stopID={stop.id} stopName={stop.name} latestUpdate={latestUpdate}></VtStopWidget>
                     })}
                 </Layout>
             </ScrollView>
@@ -100,7 +100,13 @@ function getUniqueStations(stations) {
         }
     });
 
-    return Array.from(uniqueStations.values());
+    // Convert stations to include name an ID
+    let uniqueStationsArray = [];
+    uniqueStations.forEach((value, key) => {
+        uniqueStationsArray.push({name: key, id: value});
+    } );
+
+    return uniqueStationsArray;
 }
 // Helper funtions END
 

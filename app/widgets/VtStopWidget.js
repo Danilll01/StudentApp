@@ -9,7 +9,7 @@ import { GenerateAndStoreToken, GetDepatureBoard, GetNearestStop } from '../scre
 
 const MAX_DISPLAY_RIDES = 6;
 
-function VtStopWidget({ stopID, latestUpdate }) {
+function VtStopWidget({ stopID, stopName, latestUpdate }) {
     const theme = useTheme();
 
     const [departureList, setDepartureList] = useState([]);
@@ -34,7 +34,7 @@ function VtStopWidget({ stopID, latestUpdate }) {
     return (
         <Layout style={[style.root, { backgroundColor: theme['background-basic-color-3'] }]}>
             <Text category='h1' style={style.header}>
-                {(typeof departureList === undefined) || (departureList.length == 0) ? "Inga avgångar" : departureList[0].stop.split(',')[0]}
+                {departureList.length == 0 ? "Inga avgångar för " + stopName : departureList[0].stop.split(',')[0]}
             </Text>
             {departureList.map((ride, index) => {
                 return (
@@ -61,6 +61,8 @@ const style = StyleSheet.create({
     header: {
         textAlign: 'center',
         paddingTop: 20,
+        paddingLeft: 5,
+        paddingRight: 5,
         fontSize: 22,
     },
     rideItem: {
