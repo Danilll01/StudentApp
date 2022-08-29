@@ -1,12 +1,17 @@
 import React, { useState, useEffect} from 'react';
-import { View, Text, StyleSheet } from 'react-native';
+import { StyleSheet } from 'react-native';
 import moment from "moment";
+
+// UI library
+import { Layout, Text, Card, Button, useTheme, Icon } from '@ui-kitten/components';
 
 import { GenerateAndStoreToken, GetDepatureBoard, GetNearestStop } from '../screens/Transport/Vasttrafik.js';
 
 const MAX_DISPLAY_RIDES = 6;
 
 function VtStopWidget({ stopID, latestUpdate }) {
+    const theme = useTheme();
+
     const [departureList, setDepartureList] = useState([]);
     const [refreshing, setRefreshing] = useState(false);
     
@@ -27,21 +32,21 @@ function VtStopWidget({ stopID, latestUpdate }) {
     }, [latestUpdate])
     
     return (
-        <View style={style.root}>
+        <Layout style={[style.root, { backgroundColor: theme['background-basic-color-3'] }]}>
             <Text category='h1' style={style.header}>
                 {(typeof departureList === undefined) || (departureList.length == 0) ? "Inga avgångar" : departureList[0].stop.split(',')[0]}
             </Text>
             {departureList.map((ride, index) => {
                 return (
-                <View key={index} style={style.rideItem} >
-                    <View style={[style.iconRoot, { backgroundColor: ride.bgColor }]}>
+                <Layout key={index} style={style.rideItem} >
+                    <Layout style={[style.iconRoot, { backgroundColor: ride.bgColor }]}>
                         <Text style={[style.iconText, {color: ride.fgColor}]}>{ride.sname}</Text>
-                    </View>
+                    </Layout>
                     <Text style={style.rideName}>{"Mot " + ride.direction}</Text>
                     <Text style={{marginLeft: 'auto'}}>{getDepTimeDiff(ride.date, ride.time)}</Text>
-                </View>)
+                </Layout>)
             })}
-        </View>
+        </Layout>
     );
 }
 
@@ -59,6 +64,7 @@ const style = StyleSheet.create({
         fontSize: 22,
     },
     rideItem: {
+        backgroundColor: 'transparent',
         flexDirection: 'row',
         padding: 10,
         paddingBottom: 0,
