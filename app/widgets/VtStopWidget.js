@@ -1,6 +1,5 @@
 import React, { useState, useEffect} from 'react';
 import { View, Text, StyleSheet } from 'react-native';
-import styles from './WidgetStyles.js';
 import moment from "moment";
 
 import { GenerateAndStoreToken, GetDepatureBoard, GetNearestStop } from '../screens/Transport/Vasttrafik.js';
@@ -28,17 +27,17 @@ function VtStopWidget({ stopID, latestUpdate }) {
     }, [latestUpdate])
     
     return (
-        <View style={styles.basicWidget}>
-            <Text category='h1' style={styles.basicWidgetHeader}>
+        <View style={style.root}>
+            <Text category='h1' style={style.header}>
                 {(typeof departureList === undefined) || (departureList.length == 0) ? "Inga avgångar" : departureList[0].stop.split(',')[0]}
             </Text>
             {departureList.map((ride, index) => {
                 return (
-                <View key={index} style={VtStopWidgetStyle.rideItem} >
-                    <View style={{backgroundColor: ride.bgColor, width: 45, height: 33, borderRadius: 5, justifyContent: 'center'}}>
-                        <Text style={{color: ride.fgColor, textAlign: 'center', fontWeight: 'bold', fontSize: 14,}}>{ride.sname}</Text>
+                <View key={index} style={style.rideItem} >
+                    <View style={[style.iconRoot, { backgroundColor: ride.bgColor }]}>
+                        <Text style={[style.iconText, {color: ride.fgColor}]}>{ride.sname}</Text>
                     </View>
-                    <Text style={VtStopWidgetStyle.rideName}>{"Mot " + ride.direction}</Text>
+                    <Text style={style.rideName}>{"Mot " + ride.direction}</Text>
                     <Text style={{marginLeft: 'auto'}}>{getDepTimeDiff(ride.date, ride.time)}</Text>
                 </View>)
             })}
@@ -46,7 +45,19 @@ function VtStopWidget({ stopID, latestUpdate }) {
     );
 }
 
-const VtStopWidgetStyle = StyleSheet.create({
+const style = StyleSheet.create({
+    root: {
+        backgroundColor: '#EDEDED',
+        marginBottom: 20,
+        paddingBottom: 20,
+        height: 'auto',
+        borderRadius: 16,
+    },
+    header: {
+        textAlign: 'center',
+        paddingTop: 20,
+        fontSize: 22,
+    },
     rideItem: {
         flexDirection: 'row',
         padding: 10,
@@ -55,8 +66,21 @@ const VtStopWidgetStyle = StyleSheet.create({
     rideName: {
         width: '60%',
         paddingLeft:5,
+    },
+    iconRoot: {
+        width: 45, 
+        height: 33, 
+        borderRadius: 5, 
+        justifyContent: 'center'
+    },
+    iconText: {
+        textAlign: 'center', 
+        fontWeight: 'bold', 
+        fontSize: 14
     }
+    
 })
+
 
 // Returns the time difference between the current time and the departure time
 function getDepTimeDiff(date, time) {
