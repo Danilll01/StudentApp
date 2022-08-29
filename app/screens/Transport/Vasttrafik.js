@@ -70,6 +70,18 @@ export const GetNearestStop = async (GPSlat, GPSlon) => {
 
     let res = await CallVTAPIWithPayload(APIEndpoint, payload);
 
+    // Sort the stops by longitude and latitude distance
+    res.data.LocationList.StopLocation.map(stop => {
+        return {
+            ...stop,
+            distance: getDistance(GPSlat, GPSlon, stop.lat, stop.lon)
+        }
+    }).sort((a, b) => {
+        return a.distance - b.distance;
+    }).map(stop => {
+        return stop.id;
+    });
+
     return {res};
 }
 
@@ -97,6 +109,26 @@ const CallVTAPIWithPayload = async (APIEndpoint, payload) => {
     })
 
     return res;
+}
+
+// Calculates distance between latitudes and longitudes in meters
+function getDistance(lat1, lon1, lat2, lon2) {
+    var R = 6371; // Radius of the earth in km
+    var dLat = deg2rad(lat2 - lat1);  // deg2rad below
+    var dLon = deg2rad(lon2 - lon1);
+    var a =
+        Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+        Math.cos(deg2rad(lat1)) * Math.cos(deg2rad(lat2)) *
+        Math.sin(dLon / 2) * Math.sin(dLon / 2)
+        ;
+    var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+    var d = (R * c) / 1000; // Distance in meters
+    return d;
+}
+
+// Converts degrees to radians
+function deg2rad(deg) {
+    return deg * (Math.PI / 180)
 }
 
 function DateToFormattedString(d) {         

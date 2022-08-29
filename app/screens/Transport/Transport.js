@@ -37,7 +37,7 @@ function TransportScreen() {
                 let uniqueStations = getUniqueStations(stations);
 
                 // Update stop IDs and latest update
-                setNearStopIDs(uniqueStations.sort());
+                setNearStopIDs(uniqueStations);
                 setLatestUpdate(Date.now());
 
             }).catch(err => {
