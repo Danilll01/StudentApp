@@ -1,5 +1,5 @@
 import React, { useState, useEffect} from 'react';
-import { StyleSheet } from 'react-native';
+import { StyleSheet, TouchableOpacity } from 'react-native';
 import moment from "moment";
 
 // UI library
@@ -13,6 +13,7 @@ function VtStopWidget({ stopID, stopName, latestUpdate }) {
     const theme = useTheme();
 
     const [departureList, setDepartureList] = useState([]);
+    const [isExpanded, setIsExpanded] = useState(false);
     const [refreshing, setRefreshing] = useState(false);
     
     useEffect(() => {
@@ -24,7 +25,7 @@ function VtStopWidget({ stopID, stopName, latestUpdate }) {
             // Supply departured board with fetched data
             let depList = depBoard?.res?.data?.DepartureBoard?.Departure || [];
 
-            setDepartureList(depList.slice(0,MAX_DISPLAY_RIDES));
+            setDepartureList(depList);
 
             setRefreshing(false);
         })
@@ -36,7 +37,7 @@ function VtStopWidget({ stopID, stopName, latestUpdate }) {
             <Text category='h1' style={style.header}>
                 {departureList.length == 0 ? "Inga avgångar för " + stopName : departureList[0].stop.split(',')[0]}
             </Text>
-            {departureList.map((ride, index) => {
+            {departureList.slice(0, isExpanded ? departureList.length : MAX_DISPLAY_RIDES).map((ride, index) => {
                 return (
                 <Layout key={index} style={style.rideItem} >
                     <Layout style={[style.iconRoot, { backgroundColor: ride.bgColor }]}>
@@ -46,6 +47,19 @@ function VtStopWidget({ stopID, stopName, latestUpdate }) {
                     <Text style={{marginLeft: 'auto'}}>{getDepTimeDiff(ride.date, ride.time)}</Text>
                 </Layout>)
             })}
+            <TouchableOpacity 
+                style={style.expandButton}
+                onPress={() => {
+                    setIsExpanded(!isExpanded);
+                }}>
+            
+                <Icon 
+                    name={'arrow-ios-' + (isExpanded ? "up" : "down") + 'ward-outline'} 
+                    fill={theme['text-basic-color']} 
+                    style={{width: 42, height: 42, marginLeft: 15}}
+                />
+            </TouchableOpacity>
+            
         </Layout>
     );
 }
@@ -54,7 +68,6 @@ const style = StyleSheet.create({
     root: {
         backgroundColor: '#EDEDED',
         marginBottom: 20,
-        paddingBottom: 20,
         height: 'auto',
         borderRadius: 16,
     },
@@ -85,6 +98,11 @@ const style = StyleSheet.create({
         textAlign: 'center', 
         fontWeight: 'bold', 
         fontSize: 14
+    },
+    expandButton: {
+        backgroundColor: 'transparent',
+        justifyContent: 'center',
+        alignItems: 'center',
     }
     
 })
