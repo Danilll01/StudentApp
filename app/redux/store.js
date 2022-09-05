@@ -6,16 +6,18 @@ import { composeWithDevTools } from 'redux-devtools-extension';
 
 import themeReducer from './themeSlice';
 import recipesReducer from './recipesSlice';
+import transportSlice from './transportSlice';
 
 const persistConfig = {
 	key: "root",
 	version: 1,
 	storage: AsyncStorage,
-    whitelist: ['theme', 'recipes']
+    whitelist: ['theme', 'recipes', 'transport']
 }
 const rootReducer = combineReducers({
 	theme: themeReducer,
     recipes: recipesReducer,
+    transport: transportSlice,
 })
 const persistedReducer = persistReducer(persistConfig, rootReducer)
 
