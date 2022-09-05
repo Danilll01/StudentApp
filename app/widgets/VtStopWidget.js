@@ -47,18 +47,20 @@ function VtStopWidget({ stopID, stopName, latestUpdate }) {
                     <Text style={{marginLeft: 'auto'}}>{getDepTimeDiff(ride.date, ride.time)}</Text>
                 </Layout>)
             })}
-            <TouchableOpacity 
-                style={style.expandButton}
-                onPress={() => {
-                    setIsExpanded(!isExpanded);
-                }}>
-            
-                <Icon 
-                    name={'arrow-ios-' + (isExpanded ? "up" : "down") + 'ward-outline'} 
-                    fill={theme['text-basic-color']} 
-                    style={{width: 42, height: 42, marginLeft: 15}}
-                />
-            </TouchableOpacity>
+            { departureList.length > MAX_DISPLAY_RIDES && 
+                <TouchableOpacity 
+                    style={style.expandButton}
+                    onPress={() => {
+                        setIsExpanded(!isExpanded);
+                    }}>
+                
+                    <Icon 
+                        name={'arrow-ios-' + (isExpanded ? "up" : "down") + 'ward-outline'} 
+                        fill={theme['text-basic-color']} 
+                        style={{width: 42, height: 42, marginLeft: 15}}
+                    />
+                </TouchableOpacity> 
+            }
             
         </Layout>
     );
@@ -68,6 +70,7 @@ const style = StyleSheet.create({
     root: {
         backgroundColor: '#EDEDED',
         marginBottom: 20,
+        paddingBottom: 15,
         height: 'auto',
         borderRadius: 16,
     },
